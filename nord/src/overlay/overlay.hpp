@@ -1,47 +1,44 @@
 #pragma once
 
+#include <GLFW/glfw3.h>
 #include <Windows.h>
-#include <d3d9.h>
+#include <dwmapi.h>
+#include <psapi.h>
+#include <tlhelp32.h>
 
 #include <iostream>
 
 #include "../imgui/imgui.h"
-#include "../imgui/imgui_impl_dx9.h"
-#include "../imgui/imgui_impl_win32.h"
+#include "../imgui/imgui_impl_glfw.h"
+#include "../imgui/imgui_impl_opengl3.h"
 
-#pragma comment( lib, "d3d9.lib" )
+#pragma comment( lib, "dwmapi.lib" )
 
 namespace nord
 {
     class overlay
     {
        public:
-        overlay( LPCWSTR name ) : name( name ), direct3d( nullptr ), device( nullptr ), params( { NULL } )
+        overlay( const char *const title ) : title( title )
         {
         }
 
-        /// <summary>
-        /// Starts the main overlay window.
-        /// </summary>
-        void start();
-
-        // directx interface variables
-        IDirect3D9Ex* direct3d;
-        IDirect3DDevice9Ex* device;
-        D3DPRESENT_PARAMETERS params;
+        // starts the overlay window. returns false if something goes wrong with glfw
+        bool start();
 
        private:
-        // main update loop
-        void update();
+        // initializers / constructors
+        bool setup_glflw();
+        bool setup_imgui();
 
-        void setup_window();
-        bool setup_directx();
-        void cleanup_directx();
-        void extend_into_client();
+        // destructors
+        void destroy_glflw();
+        void destroy_imgui();
 
-        WNDCLASSEX window_class;
-        HWND window;
-        LPCWSTR name;
+        const char *get_glsl_version();
+
+        GLFWwindow *window = nullptr;
+        const char *const title;
     };
 
     extern overlay overlay_mgr;

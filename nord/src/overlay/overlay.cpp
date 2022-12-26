@@ -1,213 +1,157 @@
 #include "overlay.hpp"
 
-#include <dwmapi.h>
-
 #include <thread>
 
 #include "../data/process_hook.hpp"
 
-LRESULT CALLBACK WinProc( HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam );
-
 namespace nord
 {
-    void overlay::start()
+    // error callback function for prettyness ;)
+    static void glfw_error_callback( int error, const char* const description )
     {
-        while ( !process_hook_mgr.window_active )
-            ;
-
-        setup_window();
-
-        if ( !setup_directx() )
-        {
-            MessageBox(
-                nullptr,
-                L"Unable to set up the DirectX device. Try restarting the application or contact an administrator.",
-                L"Error",
-                MB_ICONERROR | MB_OK );
-            ExitProcess( EXIT_FAILURE );
-        }
-
-        std::thread t(
-            [ & ]
-            {
-                while ( true )
-                    update();
-            } );
-
-        t.detach();
+        std::cout << "Error (" << error << "): " << description << std::endl;
     }
 
-    bool overlay::setup_directx()
+    bool overlay::setup_glflw()
     {
-        if ( FAILED( Direct3DCreate9Ex( D3D_SDK_VERSION, &direct3d ) ) )
+        glfwSetErrorCallback( glfw_error_callback );
+
+        if ( !glfwInit() )
             return false;
 
-        D3DPRESENT_PARAMETERS Params = { 0 };
-        Params.Windowed = TRUE;
-        Params.SwapEffect = D3DSWAPEFFECT_DISCARD;
-        Params.hDeviceWindow = window;
-        Params.MultiSampleQuality = D3DMULTISAMPLE_NONE;
-        Params.BackBufferFormat = D3DFMT_A8R8G8B8;
-        Params.BackBufferWidth = process_hook_mgr.screen.width;
-        Params.BackBufferHeight = process_hook_mgr.screen.height;
-        Params.PresentationInterval = D3DPRESENT_INTERVAL_ONE;
-        Params.EnableAutoDepthStencil = TRUE;
-        Params.AutoDepthStencilFormat = D3DFMT_D16;
-        Params.PresentationInterval = D3DPRESENT_INTERVAL_ONE;
-        Params.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;
+        glfwWindowHint( GLFW_RESIZABLE, GLFW_FALSE );
+        glfwWindowHint( GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE );
 
-        if ( FAILED( direct3d->CreateDeviceEx(
-                 D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, window, D3DCREATE_HARDWARE_VERTEXPROCESSING, &Params, 0, &device ) ) )
+        // create our window
+        if ( !( window = glfwCreateWindow( 800, 800, title, nullptr, nullptr ) ) )
         {
-            direct3d->Release();
+            glfwTerminate();
             return false;
         }
 
-        ImGui::CreateContext();
-        ImGuiIO& io = ImGui::GetIO();
-        ( void )io;
-        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+        glfwSetWindowAttrib( window, GLFW_DECORATED, GLFW_FALSE );
+        glfwSetWindowAttrib( window, GLFW_MOUSE_PASSTHROUGH, GLFW_TRUE );
+        glfwSetWindowAttrib( window, GLFW_FLOATING, GLFW_TRUE );
 
-        ImGui_ImplWin32_Init( window );
-        ImGui_ImplDX9_Init( device );
-        direct3d->Release();
+        // make the window's context current
+        glfwMakeContextCurrent( window );
+        glfwShowWindow( window );
+        glfwSwapInterval( 1 );
         return true;
     }
 
-    void overlay::cleanup_directx()
+    bool overlay::setup_imgui()
     {
-        ImGui_ImplDX9_Shutdown();
-        ImGui_ImplWin32_Shutdown();
+        // setup imgui context
+        IMGUI_CHECKVERSION();
+        if ( !ImGui::CreateContext() )
+            return false;
+
+        // setup imgui style
+        ImGui::StyleColorsDark();
+
+        // setup platform/renderer backends
+        if ( !ImGui_ImplGlfw_InitForOpenGL( window, true ) )
+        {
+            ImGui::DestroyContext();
+            return false;
+        }
+
+        if ( !ImGui_ImplOpenGL3_Init( get_glsl_version() ) )
+        {
+            ImGui_ImplGlfw_Shutdown();
+            ImGui::DestroyContext();
+            return false;
+        }
+    }
+
+    bool overlay::start()
+    {
+        // setup glflw window
+        if ( !setup_glflw() )
+            return false;
+
+        // setup imgui instance
+        if ( !setup_imgui() )
+        {
+            destroy_glflw();
+            return false;
+        }
+
+        ImVec4 clear_color = ImVec4( 0.45f, 0.55f, 0.60f, 1.00f );
+
+        // loop until the user closes roblox
+        while ( process_hook_mgr.window != nullptr && !glfwWindowShouldClose( window ) )
+        {
+            glfwPollEvents();
+
+            // Update window position and size
+            glfwSetWindowPos( window, process_hook_mgr.screen.x, process_hook_mgr.screen.y );
+            glfwSetWindowSize( window, process_hook_mgr.screen.width, process_hook_mgr.screen.height );
+
+            ImGui_ImplOpenGL3_NewFrame();
+            ImGui_ImplGlfw_NewFrame();
+            ImGui::NewFrame();
+
+            // render stuff here
+            ImGui::ShowDemoWindow();
+
+            ImGui::Render();
+            int display_w, display_h;
+            glfwGetFramebufferSize( window, &display_w, &display_h );
+            glViewport( 0, 0, display_w, display_h );
+            glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
+            glClear( GL_COLOR_BUFFER_BIT );
+            ImGui_ImplOpenGL3_RenderDrawData( ImGui::GetDrawData() );
+
+            glfwSwapBuffers( window );
+        }
+
+        // cleanup
+        destroy_imgui();
+        destroy_glflw();
+        return true;
+    }
+
+    void overlay::destroy_glflw()
+    {
+        glfwDestroyWindow( window );
+        glfwTerminate();
+    }
+
+    void overlay::destroy_imgui()
+    {
+        ImGui_ImplOpenGL3_Shutdown();
+        ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();
-
-        if ( device )
-        {
-            device->EndScene();
-            device->Release();
-        }
-
-        if ( direct3d )
-            direct3d->Release();
-
-        DestroyWindow( window );
-        UnregisterClass( window_class.lpszClassName, window_class.hInstance );
     }
 
-    void overlay::extend_into_client()
+    const char* overlay::get_glsl_version()
     {
-        MARGINS margin = { -1 };
-        DwmExtendFrameIntoClientArea( window, &margin );
+        // decide GL+GLSL versions
+#if defined( IMGUI_IMPL_OPENGL_ES2 )
+        // GL ES 2.0 + GLSL 100
+        const char* glsl_version = "#version 100";
+        glfwWindowHint( GLFW_CONTEXT_VERSION_MAJOR, 2 );
+        glfwWindowHint( GLFW_CONTEXT_VERSION_MINOR, 0 );
+        glfwWindowHint( GLFW_CLIENT_API, GLFW_OPENGL_ES_API );
+#elif defined( __APPLE__ )
+        // GL 3.2 + GLSL 150
+        const char* glsl_version = "#version 150";
+        glfwWindowHint( GLFW_CONTEXT_VERSION_MAJOR, 3 );
+        glfwWindowHint( GLFW_CONTEXT_VERSION_MINOR, 2 );
+        glfwWindowHint( GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE );  // 3.2+ only
+        glfwWindowHint( GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE );            // Required on Mac
+#else
+        // GL 3.0 + GLSL 130
+        const char* glsl_version = "#version 130";
+        glfwWindowHint( GLFW_CONTEXT_VERSION_MAJOR, 3 );
+        glfwWindowHint( GLFW_CONTEXT_VERSION_MINOR, 0 );
+        // glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  // 3.2+ only
+        // glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // 3.0+ only
+#endif
+        return glsl_version;
     }
 
-    void overlay::update()
-    {
-        if ( !process_hook_mgr.window_active )
-            return;
-
-        MSG message{};
-
-        while ( message.message != WM_QUIT )
-        {
-            if ( PeekMessage( &message, window, 0, 0, PM_REMOVE ) )
-            {
-                TranslateMessage( &message );
-                DispatchMessage( &message );
-            }
-
-            // Update screen location and size
-            if ( !IsIconic( window ) )
-                MoveWindow(
-                    window,
-                    process_hook_mgr.screen.x,
-                    process_hook_mgr.screen.y,
-                    process_hook_mgr.screen.width,
-                    process_hook_mgr.screen.height,
-                    true );
-        }
-
-        cleanup_directx();
-    }
-
-    void overlay::setup_window()
-    {
-        // create window class instance
-        window_class = { sizeof( WNDCLASSEX ),
-                         0,
-                         WinProc,
-                         0,
-                         0,
-                         nullptr,
-                         LoadIcon( nullptr, IDI_APPLICATION ),
-                         LoadCursor( nullptr, IDC_ARROW ),
-                         nullptr,
-                         nullptr,
-                         name,
-                         LoadIcon( nullptr, IDI_APPLICATION ) };
-
-        RegisterClassEx( &window_class );
-
-        // create the new window
-        window = CreateWindowEx(
-            WS_EX_TOPMOST | WS_EX_LAYERED,
-            name,
-            name,
-            WS_POPUP,
-            process_hook_mgr.screen.x,
-            process_hook_mgr.screen.y,
-            process_hook_mgr.screen.width,
-            process_hook_mgr.screen.height,
-            nullptr,
-            nullptr,
-            0,
-            nullptr );
-        extend_into_client();
-
-        // make window transparent
-        SetWindowLong( window, GWL_EXSTYLE, WS_EX_LAYERED | WS_EX_TRANSPARENT | WS_EX_TOOLWINDOW );
-
-        // show the window and upadate it's state
-        ShowWindow( window, SW_SHOW );
-        UpdateWindow( window );
-    }
-
-    overlay overlay_mgr{ L"nord" };
+    overlay overlay_mgr{ "nord" };
 }  // namespace nord
-
-extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam );
-
-LRESULT CALLBACK WinProc( HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam )
-{
-    if ( ImGui_ImplWin32_WndProcHandler( hWnd, Message, wParam, lParam ) )
-        return true;
-
-    switch ( Message )
-    {
-        case WM_DESTROY:
-            if ( nord::overlay_mgr.device )
-            {
-                nord::overlay_mgr.device->EndScene();
-                nord::overlay_mgr.device->Release();
-            }
-
-            if ( nord::overlay_mgr.direct3d )
-                nord::overlay_mgr.direct3d->Release();
-
-            PostQuitMessage( 0 );
-            exit( 4 );
-            break;
-        case WM_SIZE:
-            if ( nord::overlay_mgr.device && wParam != SIZE_MINIMIZED )
-            {
-                ImGui_ImplDX9_InvalidateDeviceObjects();
-                nord::overlay_mgr.params.BackBufferWidth = LOWORD( lParam );
-                nord::overlay_mgr.params.BackBufferHeight = HIWORD( lParam );
-                HRESULT hr = nord::overlay_mgr.device->Reset( &nord::overlay_mgr.params );
-                if ( hr == D3DERR_INVALIDCALL )
-                    IM_ASSERT( 0 );
-                ImGui_ImplDX9_CreateDeviceObjects();
-            }
-            break;
-        default: return DefWindowProc( hWnd, Message, wParam, lParam ); break;
-    }
-    return 0;
-}

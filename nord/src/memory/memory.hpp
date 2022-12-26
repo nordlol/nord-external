@@ -12,6 +12,16 @@ namespace nord
         std::int32_t y;
         std::int32_t width;
         std::int32_t height;
+
+        bool operator==( const screen& screen )
+        {
+            return x == screen.x && y == screen.y && width == screen.width && height == screen.height;
+        }
+
+        bool operator!=( const screen& screen )
+        {
+            return !(*this == screen);
+        }
     } screen_t;
 
     class memory

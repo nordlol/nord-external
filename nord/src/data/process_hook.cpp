@@ -4,7 +4,7 @@ namespace nord
 {
     bool process_hook::load_window()
     {
-        if ( window = FindWindow( nullptr, L"Roblox" ) )
+        if ( window = FindWindow( nullptr, L"Untitled - Notepad" ) )
         {
             // Note: maybe make this a little nicer? dumb check
             if ( memory::get_client_rect( window, &screen ) )
@@ -23,14 +23,12 @@ namespace nord
             // processes don't try and use faulty data.
             if ( !load_window() )
             {
-                window = nullptr;
-                screen = { 0, 0, 0, 0 };
-                window_active = false;
+                //window = nullptr;
+                //screen = { 0, 0, 0, 0 };
+                //window_active = false;
             }
-
-            if ( window_active )
-                std::cout << "[DEBUG] screen { " << screen.x << ", " << screen.y << ", " << screen.width << ", "
-                          << screen.height << " }\n";
+            //if ( window_active )
+                //std::cout << screen.x << ' ' << screen.y << ' ' << screen.width << ' ' << screen.height << '\n';
         }
     }
 
