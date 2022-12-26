@@ -26,10 +26,13 @@ namespace nord
         // starts the overlay window. returns false if something goes wrong with glfw
         bool start();
 
+        bool show_ui = true;
        private:
         // initializers / constructors
         bool setup_glflw();
         bool setup_imgui();
+
+        void render();
 
         // destructors
         void destroy_glflw();

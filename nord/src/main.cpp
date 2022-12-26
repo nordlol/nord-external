@@ -16,5 +16,10 @@ std::int32_t main()
         std::this_thread::sleep_for( std::chrono::microseconds( 10 ) );
 
     // start overlay
-    nord::overlay_mgr.start();
+    if (!nord::overlay_mgr.start())
+    {
+        nord::util_mgr.log( "Error starting overlay\n" );
+    }
+
+    std::cin.get();
 }

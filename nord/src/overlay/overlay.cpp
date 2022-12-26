@@ -12,6 +12,14 @@ namespace nord
         std::cout << "Error (" << error << "): " << description << std::endl;
     }
 
+    void glfw_key_callback( GLFWwindow* window, int key, int scancode, int action, int mods )
+    {
+        if ( key == GLFW_KEY_INSERT && action == GLFW_PRESS )
+            overlay_mgr.show_ui = !overlay_mgr.show_ui;
+
+        glfwSetWindowAttrib( window, GLFW_MOUSE_PASSTHROUGH, !overlay_mgr.show_ui );
+    }
+
     bool overlay::setup_glflw()
     {
         glfwSetErrorCallback( glfw_error_callback );
@@ -29,14 +37,15 @@ namespace nord
             return false;
         }
 
+        glfwSetKeyCallback( window, glfw_key_callback );
+
         glfwSetWindowAttrib( window, GLFW_DECORATED, GLFW_FALSE );
-        glfwSetWindowAttrib( window, GLFW_MOUSE_PASSTHROUGH, GLFW_TRUE );
         glfwSetWindowAttrib( window, GLFW_FLOATING, GLFW_TRUE );
 
         // make the window's context current
         glfwMakeContextCurrent( window );
         glfwShowWindow( window );
-        glfwSwapInterval( 1 );
+        glfwSwapInterval( 0 );
         return true;
     }
 
@@ -51,18 +60,8 @@ namespace nord
         ImGui::StyleColorsDark();
 
         // setup platform/renderer backends
-        if ( !ImGui_ImplGlfw_InitForOpenGL( window, true ) )
-        {
-            ImGui::DestroyContext();
-            return false;
-        }
-
-        if ( !ImGui_ImplOpenGL3_Init( get_glsl_version() ) )
-        {
-            ImGui_ImplGlfw_Shutdown();
-            ImGui::DestroyContext();
-            return false;
-        }
+        ImGui_ImplGlfw_InitForOpenGL( window, true );
+        ImGui_ImplOpenGL3_Init( get_glsl_version() );
     }
 
     bool overlay::start()
@@ -89,20 +88,7 @@ namespace nord
             glfwSetWindowPos( window, process_hook_mgr.screen.x, process_hook_mgr.screen.y );
             glfwSetWindowSize( window, process_hook_mgr.screen.width, process_hook_mgr.screen.height );
 
-            ImGui_ImplOpenGL3_NewFrame();
-            ImGui_ImplGlfw_NewFrame();
-            ImGui::NewFrame();
-
-            // render stuff here
-            ImGui::ShowDemoWindow();
-
-            ImGui::Render();
-            int display_w, display_h;
-            glfwGetFramebufferSize( window, &display_w, &display_h );
-            glViewport( 0, 0, display_w, display_h );
-            glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
-            glClear( GL_COLOR_BUFFER_BIT );
-            ImGui_ImplOpenGL3_RenderDrawData( ImGui::GetDrawData() );
+            render();
 
             glfwSwapBuffers( window );
         }
@@ -111,6 +97,24 @@ namespace nord
         destroy_imgui();
         destroy_glflw();
         return true;
+    }
+
+    void overlay::render()
+    {
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
+        if ( show_ui )
+            ImGui::ShowDemoWindow();
+
+        ImGui::Render();
+        int display_w, display_h;
+        glfwGetFramebufferSize( window, &display_w, &display_h );
+        glViewport( 0, 0, display_w, display_h );
+        glClearColor( 0.0f, 0.0f, 0.0f, show_ui ? 0.2f : 0.0f );
+        glClear( GL_COLOR_BUFFER_BIT );
+        ImGui_ImplOpenGL3_RenderDrawData( ImGui::GetDrawData() );
     }
 
     void overlay::destroy_glflw()
