@@ -96,6 +96,9 @@ namespace nord
             return false;
         }
 
+        // initiate any variables needed for the menu
+        menu_mgr.initiate();
+
         // loop until the user closes roblox
         while ( process_hook_mgr.window != nullptr && !glfwWindowShouldClose( window ) )
         {
@@ -131,7 +134,7 @@ namespace nord
         glfwSetWindowAttrib( window, GLFW_MOUSE_PASSTHROUGH, !( overlay_mgr.show_ui && overlay_mgr.is_focused ) );
 
         if ( show_ui )
-            ImGui::ShowDemoWindow();
+            menu_mgr.render();
         ImGui::Render();
 
         int display_w, display_h;

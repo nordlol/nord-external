@@ -6,9 +6,12 @@
 #include <string>
 #include <string_view>
 #include <windows.h>
+#include <filesystem>
 
 namespace nord
 {
+    namespace fs = std::filesystem;
+
     enum class log_level
     {
         debug,
@@ -21,8 +24,16 @@ namespace nord
        public:
         logger()
         {
-            const auto file_name = "./logs/" + time_str( get_local_time(), "yyyy-MM-dd") + ".txt";
+            const fs::path logs{ "logs" };
+            const fs::path full_path = fs::current_path() / logs;
+
+            const auto file_name = full_path / ( time_str( get_local_time(), "yyyy-MM-dd" ) + ".txt" );
+            
+            // create directory if logs don't exists
+            fs::create_directory( full_path );
+
             log_file = std::ofstream{ file_name };
+            
             console = IsDebuggerPresent();
         }
 
@@ -49,16 +60,16 @@ namespace nord
         const char* log_level_str( log_level level );
 
         template< typename T >
-        void MagicLog( std::ostream& o, T t )
+        void log_varadic( std::ostream& o, T t )
         {
             o << t;
         }
 
         template< typename T, typename... Args >
-        void MagicLog( std::ostream& o, T t, Args... args )  // recursive variadic function
+        void log_varadic( std::ostream& o, T t, Args... args )  // recursive variadic function
         {
-            MagicLog( o, t );
-            MagicLog( o, args... );
+            log_varadic( o, t );
+            log_varadic( o, args... );
         }
 
         template< typename... Args >
@@ -66,9 +77,11 @@ namespace nord
         {
             std::ostringstream out;
             out << time_str( get_local_time(), "%T" ) << " [" << log_level_str( level ) << "] " << source << ": ";
-            MagicLog( out, args... );
+            log_varadic( out, args... );
 
-            std::cout << out.str();
+            if (console)
+                std::cout << out.str();
+            log_file << out.str();
         }
         
         std::ofstream log_file;

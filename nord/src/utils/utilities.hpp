@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "logger/logger.hpp"
+#include "config/config.hpp"
 
 namespace nord
 {
