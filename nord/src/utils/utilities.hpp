@@ -2,15 +2,10 @@
 
 #include <iostream>
 
+#include "logger/logger.hpp"
+
 namespace nord
 {
-    enum class log_level
-    {
-        debug,
-        warning,
-        error
-    };
-
     class utilities
     {
        public:
