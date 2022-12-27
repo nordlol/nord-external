@@ -68,12 +68,11 @@ namespace nord
         return true;
     }
 
-    bool overlay::setup_imgui()
+    void overlay::setup_imgui()
     {
         // setup imgui context
         IMGUI_CHECKVERSION();
-        if ( !ImGui::CreateContext() )
-            return false;
+        ImGui::CreateContext();
 
         // setup imgui style
         ImGui::StyleColorsDark();
@@ -90,11 +89,8 @@ namespace nord
             return false;
 
         // setup imgui instance
-        if ( !setup_imgui() )
-        {
-            destroy_glflw();
-            return false;
-        }
+        setup_imgui();
+
 
         // initiate any variables needed for the menu
         menu_mgr.initiate();
@@ -117,6 +113,8 @@ namespace nord
             glfw_update_focus( window );
 
             glfwSwapBuffers( window );
+
+            process_hook_mgr.load_window();
         }
 
         // cleanup

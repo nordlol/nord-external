@@ -30,7 +30,7 @@ namespace nord
        private:
         // initializers / constructors
         bool setup_glflw();
-        bool setup_imgui();
+        void setup_imgui();
 
         void render();
 

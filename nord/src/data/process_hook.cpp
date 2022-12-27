@@ -14,19 +14,19 @@ namespace nord
         return false;
     }
 
-    void process_hook::update()
-    {
-        while ( true )
-        {
-            load_window();
-        }
-    }
+    //void process_hook::update()
+    //{
+    //    while ( true )
+    //    {
+    //        load_window();
+    //    }
+    //}
 
-    void process_hook::start()
-    {
-        std::thread t( &process_hook::update, this );
-        t.detach();
-    }
+    //void process_hook::start()
+    //{
+    //    std::thread t( &process_hook::update, this );
+    //    t.detach();
+    //}
 
     process_hook process_hook_mgr;
 }  // namespace nord

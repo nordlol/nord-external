@@ -14,16 +14,17 @@ namespace nord
        public:
         /// Starts the process hook.
         /// </summary>
-        void start();
+        //void start();
 
         HWND window;
         screen_t screen;
         bool window_active = false;
 
+        bool load_window();
+
        private:
         void update();
-
-        bool load_window();
+        
     };
 
     extern process_hook process_hook_mgr;
