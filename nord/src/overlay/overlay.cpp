@@ -3,6 +3,9 @@
 #include <thread>
 
 #include "../data/process_hook.hpp"
+#include "../utils/logger/logger.hpp"
+
+#define IS_RENDERABLE ( process_hook_mgr.window_active || overlay_mgr.is_focused )
 
 namespace nord
 {
@@ -12,12 +15,28 @@ namespace nord
         std::cout << "Error (" << error << "): " << description << std::endl;
     }
 
-    void glfw_key_callback( GLFWwindow* window, int key, int scancode, int action, int mods )
+    void glfw_key_callback( GLFWwindow* window )
     {
-        if ( key == GLFW_KEY_INSERT && action == GLFW_PRESS )
-            overlay_mgr.show_ui = !overlay_mgr.show_ui;
+        // ensure that the desired process window is selected
+        if ( !IS_RENDERABLE )
+            return;
 
-        glfwSetWindowAttrib( window, GLFW_MOUSE_PASSTHROUGH, !overlay_mgr.show_ui );
+        if ( GetAsyncKeyState( VK_INSERT ) & 0x01 )
+        {
+            overlay_mgr.show_ui = !overlay_mgr.show_ui;
+        }
+    }
+
+    void glfw_update_focus( GLFWwindow* window )
+    {
+        // weird code that makes the ui work magic
+        overlay_mgr.is_focused = process_hook_mgr.window_active || ( glfwGetWindowAttrib( window, GLFW_FOCUSED ) ||
+                                                                     glfwGetWindowAttrib( window, GLFW_FLOATING ) );
+
+        glfwSetWindowAttrib( window, GLFW_FLOATING, process_hook_mgr.window_active );
+
+        if ( !overlay_mgr.is_focused )
+            glfwSetWindowAttrib( window, GLFW_MOUSE_PASSTHROUGH, true );
     }
 
     bool overlay::setup_glflw()
@@ -37,10 +56,10 @@ namespace nord
             return false;
         }
 
-        glfwSetKeyCallback( window, glfw_key_callback );
-
         glfwSetWindowAttrib( window, GLFW_DECORATED, GLFW_FALSE );
         glfwSetWindowAttrib( window, GLFW_FLOATING, GLFW_TRUE );
+
+        // glfwSetWindowFocusCallback( window, glfw_focus_callback );
 
         // make the window's context current
         glfwMakeContextCurrent( window );
@@ -77,18 +96,22 @@ namespace nord
             return false;
         }
 
-        ImVec4 clear_color = ImVec4( 0.45f, 0.55f, 0.60f, 1.00f );
-
         // loop until the user closes roblox
         while ( process_hook_mgr.window != nullptr && !glfwWindowShouldClose( window ) )
         {
             glfwPollEvents();
 
-            // Update window position and size
+            // update window position and size
             glfwSetWindowPos( window, process_hook_mgr.screen.x, process_hook_mgr.screen.y );
             glfwSetWindowSize( window, process_hook_mgr.screen.width, process_hook_mgr.screen.height );
 
             render();
+
+            // key callback function
+            glfw_key_callback( window );
+
+            // update focus
+            glfw_update_focus( window );
 
             glfwSwapBuffers( window );
         }
@@ -105,15 +128,19 @@ namespace nord
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
+        glfwSetWindowAttrib( window, GLFW_MOUSE_PASSTHROUGH, !( overlay_mgr.show_ui && overlay_mgr.is_focused ) );
+
         if ( show_ui )
             ImGui::ShowDemoWindow();
-
         ImGui::Render();
+
         int display_w, display_h;
         glfwGetFramebufferSize( window, &display_w, &display_h );
         glViewport( 0, 0, display_w, display_h );
-        glClearColor( 0.0f, 0.0f, 0.0f, show_ui ? 0.2f : 0.0f );
+        glClearColor( 0.0f, 0.0f, 0.0f, ( show_ui ) ? 0.2f : 0.0f );
         glClear( GL_COLOR_BUFFER_BIT );
+
+        // only render if the game window is selected
         ImGui_ImplOpenGL3_RenderDrawData( ImGui::GetDrawData() );
     }
 

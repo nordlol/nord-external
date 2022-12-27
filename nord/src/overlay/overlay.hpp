@@ -27,6 +27,8 @@ namespace nord
         bool start();
 
         bool show_ui = true;
+        bool is_focused = true;
+
        private:
         // initializers / constructors
         bool setup_glflw();
