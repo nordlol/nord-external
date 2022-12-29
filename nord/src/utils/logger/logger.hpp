@@ -43,15 +43,15 @@ namespace nord
         }
 
         template< typename... Args >
-        void log_debug( const char* const source, Args... args )
+        void log_debug( const char* const source, const char* const format, Args... args )
         {
-            log( log_level::debug, source, args... );
+            log( log_level::debug, source, format, args... );
         }
 
         template< typename... Args >
-        void log_error( const char* const source, Args... args )
+        void log_error( const char* const source, const char* const format, Args... args )
         {
-            log( log_level::error, source, args... );
+            log( log_level::error, source, format, args... );
         }
 
        private:
@@ -59,28 +59,14 @@ namespace nord
         std::string time_str( std::tm* tm, const char* const format );
         const char* log_level_str( log_level level );
 
-        template< typename T >
-        void log_varadic( std::ostream& o, T t )
-        {
-            o << t;
-        }
-
-        template< typename T, typename... Args >
-        void log_varadic( std::ostream& o, T t, Args... args )  // recursive variadic function
-        {
-            log_varadic( o, t );
-            log_varadic( o, args... );
-        }
-
         template< typename... Args >
-        void log( log_level level, const char* const source, Args... args )
+        void log( log_level level, const char* const source, const char* const format, const auto&... args )
         {
             std::ostringstream out;
-            out << time_str( get_local_time(), "%T" ) << " [" << log_level_str( level ) << "] " << source << ": ";
-            log_varadic( out, args... );
+            out << time_str( get_local_time(), "%T" ) << " [" << log_level_str( level ) << "] " << source << ": " << format;
 
-            if (console)
-                std::cout << out.str();
+            if ( console )
+                std::printf( out.str().c_str(), args... );
             log_file << out.str();
         }
         

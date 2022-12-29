@@ -6,25 +6,32 @@
 #include <thread>
 
 #include "../memory/memory.hpp"
+#include "../utils/logger/logger.hpp"
 
 namespace nord
 {
     class process_hook final
     {
        public:
-        /// Starts the process hook.
-        /// </summary>
-        //void start();
+        process_hook( const wchar_t* const process_name, const wchar_t* const window_name )
+            : window_name( window_name ),
+              mem( process_name )
+        {
+        }
 
-        HWND window;
-        screen_t screen;
+        // starts the process hook.
+        bool start();
+        bool destroy();
+
+        HWND window = nullptr;
+        screen_t screen{};
+        memory mem;
         bool window_active = false;
 
         bool load_window();
 
        private:
-        void update();
-        
+        const wchar_t* const window_name;
     };
 
     extern process_hook process_hook_mgr;

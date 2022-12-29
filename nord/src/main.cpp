@@ -7,15 +7,13 @@
 
 std::int32_t main()
 {
-    // wait for the target window to come up
-    nord::log_mgr.log_debug( "main()", "Waiting for target process\n" );
-
-    while ( !nord::process_hook_mgr.window_active )
-        nord::process_hook_mgr.load_window();
+    if ( !nord::process_hook_mgr.start() )
+        nord::log_mgr.log_error( "main()", "Unable to start process hook\n" );
 
     // start overlay
-    if (!nord::overlay_mgr.start())
+    if ( !nord::overlay_mgr.start() )
         nord::log_mgr.log_error( "main()", "Unable to start the overlay\n" );
 
+    nord::process_hook_mgr.destroy();
     nord::log_mgr.close();
 }
