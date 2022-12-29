@@ -1,4 +1,5 @@
 #include "process_hook.hpp"
+#include "roblox/util/standard_out.hpp"
 
 namespace nord
 {
@@ -28,6 +29,8 @@ namespace nord
             nord::log_mgr.log_error( "process_hook", "Failed to locate process handle or module\n" );
             return false;
         }
+
+        rbx::standard_out::get()->print( rbx::message_type::info, "Hello!" );
 
         return true;
     }

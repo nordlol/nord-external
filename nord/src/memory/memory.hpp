@@ -5,6 +5,8 @@
 #include <iostream>
 #include <optional>
 
+#include "../utils/utilities.hpp"
+
 #define in_range( x, a, b ) ( x >= a && x <= b )
 #define get_bits( x )       ( in_range( x, '0', '9' ) ? ( x - '0' ) : ( ( x & ( ~0x20 ) ) - 'A' + 0xa ) )
 #define get_byte( x )       ( get_bits( x[ 0 ] ) << 4 | get_bits( x[ 1 ] ) )
@@ -35,6 +37,8 @@ namespace nord
         std::uintptr_t size;
     } module_t;
 
+    typedef std::uintptr_t( __stdcall* callback )( void* data );
+
     class memory
     {
        public:
@@ -61,7 +65,13 @@ namespace nord
         template< typename T >
         inline T write( std::uintptr_t address, T buffer )
         {
-            if ( !WriteProcessMemory( handle, reinterpret_cast< LPCVOID >( address ), &buffer, sizeof( T ), nullptr ) )
+            return write< T >( reinterpret_cast< LPCVOID >( address ), buffer );
+        }
+
+        template< typename T >
+        inline T write( LPCVOID address, T buffer )
+        {
+            if ( !WriteProcessMemory( handle, address, &buffer, sizeof( T ), nullptr ) )
             {
                 log_mgr.log_error( "memory", "Error when attempting to write to 0x%x", address );
                 return buffer;
@@ -73,6 +83,11 @@ namespace nord
         // static methods
         static bool get_client_rect( HWND handle, screen_t* screen );
 
+        module_t module{ 0 };
+        HANDLE handle = nullptr;
+
+        void* CreateCharPointerString( const char* string );
+
        private:
         HANDLE get_process();
         std::optional< module_t > get_module( HANDLE handle, const wchar_t* module_name );
@@ -80,8 +95,19 @@ namespace nord
         bool check_pattern( const std::uint8_t* data, const char* pattern );
 
         const wchar_t* const name;
-        module_t module{ 0 };
-        HANDLE handle = nullptr;
+    };
+
+    template< class RetType >
+    class function
+    {
+       public:
+        function( memory* mem, const std::uintptr_t address ) : mem( mem ), address( address )
+        {
+        }
+
+       private:
+        memory* mem;
+        std::uintptr_t address;
     };
 
 }  // namespace nord

@@ -24,7 +24,7 @@ namespace nord
         // starts the overlay window. returns false if something goes wrong with glfw
         bool start();
 
-        bool show_ui = true;
+        bool show_ui = false;
         bool is_focused = true;
 
        private:

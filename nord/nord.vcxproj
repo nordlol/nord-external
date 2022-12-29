@@ -169,8 +169,10 @@
     <ClCompile Include="src\data\process_hook.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\utils\utilities.cpp" />
+    <ClCompile Include="src\data\roblox\util\standard_out.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\data\roblox\offsets.hpp" />
     <ClInclude Include="src\imgui\imconfig.h" />
     <ClInclude Include="src\imgui\imgui.h" />
     <ClInclude Include="src\imgui\imgui_impl_glfw.h" />
@@ -187,6 +189,7 @@
     <ClInclude Include="src\memory\memory.hpp" />
     <ClInclude Include="src\data\process_hook.hpp" />
     <ClInclude Include="src\utils\utilities.hpp" />
+    <ClInclude Include="src\data\roblox\util\standard_out.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".clang-format" />
