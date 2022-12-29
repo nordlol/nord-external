@@ -30,6 +30,9 @@ namespace nord
             return false;
         }
 
+        // init offsets as we have a handle and module
+        rbx::offsets::get()->initialize();
+
         rbx::standard_out::get()->print( rbx::message_type::info, "Hello!" );
 
         return true;

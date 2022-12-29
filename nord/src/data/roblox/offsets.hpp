@@ -1,15 +1,29 @@
 #pragma once
 #include <cstdint>
+#include <memory>
 
-#include "../process_hook.hpp"
-
-#define rebase( address ) ( process_hook_mgr.mem.module.base + address - 0x400000 );
-
-namespace nord::rbx::offsets
+namespace nord::rbx
 {
-    namespace standard_out
-    {
-        const auto print = rebase( 0x7258E0 );  // standard_out::get()->print()
+    // namespace standard_out
+    //{
+    //    std::uintptr_t print = 0x7258E0;  // standard_out::get()->print()
 
-    }  // namespace standard_out
-}  // namespace nord::rbx::offsets
+    //}  // namespace standard_out
+
+    class offsets final
+    {
+       public:
+        static std::shared_ptr< offsets > get();
+
+
+        std::uintptr_t print = 0x7258E0;  // standard_out::get()->print()
+
+        void initialize();
+       private:
+        offsets()
+        {
+        }
+
+        constexpr std::uintptr_t rebase( std::uintptr_t address );
+    };
+}  // namespace nord::rbx

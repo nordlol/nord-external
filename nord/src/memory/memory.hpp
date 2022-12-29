@@ -85,9 +85,6 @@ namespace nord
 
         module_t module{ 0 };
         HANDLE handle = nullptr;
-
-        void* CreateCharPointerString( const char* string );
-
        private:
         HANDLE get_process();
         std::optional< module_t > get_module( HANDLE handle, const wchar_t* module_name );
