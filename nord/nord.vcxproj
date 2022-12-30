@@ -172,6 +172,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\utils\utilities.cpp" />
     <ClCompile Include="src\data\roblox\util\standard_out.cpp" />
+    <ClCompile Include="src\data\roblox\scheduler\task_scheduler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\data\roblox\offsets.hpp" />
@@ -193,6 +194,7 @@
     <ClInclude Include="src\data\process_hook.hpp" />
     <ClInclude Include="src\utils\utilities.hpp" />
     <ClInclude Include="src\data\roblox\util\standard_out.hpp" />
+    <ClInclude Include="src\data\roblox\scheduler\task_scheduler.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".clang-format" />

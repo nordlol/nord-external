@@ -9,13 +9,34 @@ namespace nord::rbx
     class offsets final
     {
        public:
-        std::uintptr_t print = 0x10358F0;  // standard_out::get()->print()
+        offsets() : print( 0 ), get_task_scheduler( 0 )
+        {
+        }
 
-        void initialize();
+        std::uintptr_t print;               // standard_out::get()->print()
+        std::uintptr_t get_task_scheduler;  // task_scheduler::get()
+
+        bool initialize();
 
        private:
+        bool init_get_task_scheduler();
+    };
 
-        constexpr std::uintptr_t rebase( std::uintptr_t address );
+    // base class (constructs and saves address)
+    class base
+    {
+       public:
+        base( const std::uintptr_t address ) : address( address )
+        {
+        }
+
+        std::uintptr_t get_address() const
+        {
+            return address;
+        }
+
+       private:
+        std::uintptr_t address;
     };
 
     extern offsets offsets_mgr;

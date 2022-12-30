@@ -69,6 +69,9 @@
     <ClCompile Include="src\memory\glad-ext.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\data\roblox\scheduler\task_scheduler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\memory\memory.hpp">
@@ -126,6 +129,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\memory\glad-ext.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\data\roblox\scheduler\task_scheduler.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

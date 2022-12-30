@@ -31,6 +31,9 @@ namespace nord
         bool load_window();
 
        private:
+        // load roblox classes
+        bool load_roblox();
+
         const wchar_t* const window_name;
     };
 

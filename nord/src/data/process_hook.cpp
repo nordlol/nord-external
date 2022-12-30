@@ -1,4 +1,6 @@
 #include "process_hook.hpp"
+
+#include "roblox/scheduler/task_scheduler.hpp"
 #include "roblox/util/standard_out.hpp"
 
 namespace nord
@@ -30,11 +32,37 @@ namespace nord
             return false;
         }
 
+        // load roblox specific classes
+        if ( !load_roblox() )
+        {
+            nord::log_mgr.log_error( "process_hook", "Failed to load roblox specific classes\n" );
+            return false;
+        }
+
+        return true;
+    }
+
+    bool process_hook::load_roblox()
+    {
         // init offsets as we have a handle and module
-        rbx::offsets_mgr.initialize();
+        if ( !rbx::offsets_mgr.initialize() )
+        {
+            log_mgr.log_error( "process_hook", "Failed to initialize offsets\n" );
+            return false;
+        }
 
-        rbx::standard_out::get()->printf( rbx::message_type::warning, "This is a warning.");
+        // local, won't need it globally
+        std::shared_ptr< rbx::task_scheduler > scheduler = nullptr;
 
+        rbx::standard_out::get()->printf( rbx::message_type::info, "Loaded process_hook sucessfully" );
+
+        if ( !( scheduler = rbx::task_scheduler::get() ) )
+        {
+            log_mgr.log_error( "process_hook", "Failed to retrieve task scheduler instance\n" );
+            return false;
+        }
+
+        nord::log_mgr.log_debug( "process_hook", "Located RBX::TaskScheduler instance at 0x%x\n", scheduler->get_address() );
         return true;
     }
 
