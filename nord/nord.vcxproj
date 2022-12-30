@@ -162,6 +162,7 @@
     <ClCompile Include="src\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="src\imgui\imgui_tables.cpp" />
     <ClCompile Include="src\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="src\memory\glad-ext.cpp" />
     <ClCompile Include="src\utils\config\config.cpp" />
     <ClCompile Include="src\overlay\menu\menu.cpp" />
     <ClCompile Include="src\utils\logger\logger.cpp" />
@@ -183,6 +184,7 @@
     <ClInclude Include="src\imgui\imstb_rectpack.h" />
     <ClInclude Include="src\imgui\imstb_textedit.h" />
     <ClInclude Include="src\imgui\imstb_truetype.h" />
+    <ClInclude Include="src\memory\glad-ext.hpp" />
     <ClInclude Include="src\utils\config\config.hpp" />
     <ClInclude Include="src\overlay\menu\menu.hpp" />
     <ClInclude Include="src\utils\logger\logger.hpp" />

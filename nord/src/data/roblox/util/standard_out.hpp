@@ -2,8 +2,8 @@
 
 #include <time.h>
 
-#include <string>
 #include <memory>
+#include <string>
 
 #include "../offsets.hpp"
 
@@ -15,7 +15,7 @@ namespace nord::rbx
         info,
         warning,
         error,
-        sensitive,
+        sensitive, // doesn't show up in developer console
     };
 
     class standard_out
@@ -23,9 +23,10 @@ namespace nord::rbx
        public:
         static std::shared_ptr< standard_out > get();
 
-
         void print( message_type type, const char *message );
+        void print( message_type type, std::string message );
         void printf( message_type type, const char *format, ... );
+
        private:
         // prevent creation of the class outside of the singleton class
         standard_out()

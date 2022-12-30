@@ -1,19 +1,17 @@
 #pragma once
 
 #include <iostream>
+#include <string>  // std::string
 
-#include "logger/logger.hpp"
 #include "config/config.hpp"
+#include "logger/logger.hpp"
 
 namespace nord
 {
     class utilities
     {
        public:
-        void log( const char *const format, const auto &...args )
-        {
-            std::printf( format, args... );
-        }
+        static std::string format( const char *const format, va_list ap );
 
        private:
     };

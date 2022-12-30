@@ -24,28 +24,22 @@ namespace nord
             std::this_thread::sleep_for( std::chrono::microseconds( 10 ) );
 
         // target process has been found
-        if ( !mem.start() )
+        if ( !mem.proc->success() )
         {
             nord::log_mgr.log_error( "process_hook", "Failed to locate process handle or module\n" );
             return false;
         }
 
         // init offsets as we have a handle and module
-        rbx::offsets::get()->initialize();
+        rbx::offsets_mgr.initialize();
 
-        rbx::standard_out::get()->print( rbx::message_type::info, "Hello!" );
+        rbx::standard_out::get()->printf( rbx::message_type::warning, "This is a warning.");
 
         return true;
     }
 
     bool process_hook::destroy()
     {
-        if ( !mem.destroy() )
-        {
-            nord::log_mgr.log_error( "process_hook", "Failed to close memory handle\n" );
-            return false;
-        }
-
         return true;
     }
 
