@@ -62,7 +62,12 @@ namespace nord
             return false;
         }
 
-        nord::log_mgr.log_debug( "process_hook", "Located RBX::TaskScheduler instance at 0x%x\n", scheduler->get_address() );
+        log_mgr.log_debug( "process_hook", "Located RBX::TaskScheduler instance at 0x%x\n", scheduler->get_address() );
+
+        if ( !scheduler->set_frame_delay() )
+            log_mgr.log_warning(
+                "process_hook", "Unable to locate frame delay offset in RBX::TaskScheduler, proceed with caution\n" );
+
         return true;
     }
 

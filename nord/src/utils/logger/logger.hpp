@@ -1,12 +1,13 @@
 #pragma once
 
+#include <windows.h>
+
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <string>
 #include <string_view>
-#include <windows.h>
-#include <filesystem>
 
 namespace nord
 {
@@ -28,12 +29,12 @@ namespace nord
             const fs::path full_path = fs::current_path() / logs;
 
             const auto file_name = full_path / ( time_str( get_local_time(), "yyyy-MM-dd" ) + ".txt" );
-            
+
             // create directory if logs don't exists
             fs::create_directory( full_path );
 
             log_file = std::ofstream{ file_name };
-            
+
             console = IsDebuggerPresent();
         }
 
@@ -54,6 +55,12 @@ namespace nord
             log( log_level::error, source, format, args... );
         }
 
+        template< typename... Args >
+        void log_warning( const char* const source, const char* const format, Args... args )
+        {
+            log( log_level::warning, source, format, args... );
+        }
+
        private:
         std::tm* get_local_time();
         std::string time_str( std::tm* tm, const char* const format );
@@ -69,7 +76,7 @@ namespace nord
                 std::printf( out.str().c_str(), args... );
             log_file << out.str();
         }
-        
+
         std::ofstream log_file;
         bool console;
     };

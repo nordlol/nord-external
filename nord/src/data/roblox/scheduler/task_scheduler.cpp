@@ -38,6 +38,27 @@ namespace nord::rbx
         return jobs;
     }
 
+    bool task_scheduler::set_frame_delay( std::int32_t delay )
+    {
+        if ( !frame_delay_offset )
+        {
+            // locate frame day offset
+            for ( size_t offset = 0; offset < 0x500; offset += 0x4 )
+            {
+                if ( ( 1.0 / process_hook_mgr.mem.proc->read< double >( get_address() + offset ) ) == 60.0 )
+                    frame_delay_offset = offset;
+            }
+
+            // couldn't locate
+            if ( !frame_delay_offset )
+                return false;
+        }
+
+        process_hook_mgr.mem.proc->write< double >(
+            get_address() + frame_delay_offset, delay ? 1.0 / delay : 1.0 / 10000.0 );
+        return true;
+    }
+
     std::string task_scheduler::job::name()
     {
         return process_hook_mgr.mem.proc->read_str( get_address() + 0x10 );
