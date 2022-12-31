@@ -9,6 +9,7 @@
 #include <iostream>
 
 #include "menu/menu.hpp"
+#include "render_list/render_list.hpp"
 
 #pragma comment( lib, "dwmapi.lib" )
 
@@ -27,6 +28,7 @@ namespace nord
         bool show_ui = false;
         bool is_focused = true;
 
+        render::render_list render_list;
        private:
         // initializers / constructors
         bool setup_glflw();

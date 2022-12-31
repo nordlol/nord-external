@@ -12,7 +12,7 @@ namespace nord
     // error callback function for prettyness ;)
     static void glfw_error_callback( int error, const char* const description )
     {
-        std::cout << "Error (" << error << "): " << description << std::endl;
+        log_mgr.log_error( "overlay", "GLFW (%d): %s\n", error, description );
     }
 
     void glfw_key_callback( GLFWwindow* window )
@@ -91,7 +91,6 @@ namespace nord
         // setup imgui instance
         setup_imgui();
 
-
         // initiate any variables needed for the menu
         menu_mgr.initiate();
 
@@ -130,6 +129,12 @@ namespace nord
         ImGui::NewFrame();
 
         glfwSetWindowAttrib( window, GLFW_MOUSE_PASSTHROUGH, !( overlay_mgr.show_ui && overlay_mgr.is_focused ) );
+
+        const auto draw_list = ImGui::GetBackgroundDrawList();
+        render_list.begin();
+        render_list.draw( draw_list );
+        render_list.clear();
+        render_list.end();
 
         if ( show_ui )
             menu_mgr.render();
