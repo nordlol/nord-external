@@ -65,6 +65,9 @@ namespace nord
 
             // esp
             { "esp_enabled", feature{ true } },
+
+            // other
+            { "fps", feature{ 60 } },
         };
     };
 

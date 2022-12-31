@@ -1,5 +1,7 @@
 #include "offsets.hpp"
 
+#include "../process_hook.hpp"
+
 namespace nord::rbx
 {
     bool offsets::initialize()

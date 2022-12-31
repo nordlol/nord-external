@@ -255,7 +255,7 @@ void xg_process::dealloc( LPVOID const address ) const
     uintptr_t xg_process::sig_scan( const char* sig, const char* mask ) const
     {
         const auto max = module_end_ - strlen( sig );
-        for ( auto base = base_address_; base < max + 0xfffffffff; base += si_.dwPageSize - strlen( sig ) )
+        for ( auto base = base_address_; base < max; base += si_.dwPageSize - strlen( sig ) )
         {
             std::vector< uint8_t > preload;
             preload.resize( si_.dwPageSize );

@@ -1,5 +1,9 @@
 #include "task_scheduler.hpp"
 
+#include <memory>
+
+#include "../../process_hook.hpp"
+
 namespace nord::rbx
 {
     std::shared_ptr< task_scheduler > task_scheduler::get()
@@ -13,16 +17,7 @@ namespace nord::rbx
     {
         const auto container = get_address() + 0x134;
 
-        // get the scope of the vector
-        auto start = process_hook_mgr.mem.proc->read< std::uintptr_t >( container );
-        const auto end = process_hook_mgr.mem.proc->read< std::uintptr_t >( container + 0x4 );
-
-        std::vector< task_scheduler::job > jobs;
-
-        for ( ; start < end; start += 8 )
-            jobs.emplace_back( process_hook_mgr.mem.proc->read< std::uintptr_t >( start ) );
-
-        return jobs;
+        return process_hook_mgr.mem.proc->read_vector< task_scheduler::job >( container );
     }
 
     std::vector< task_scheduler::job > task_scheduler::get_jobs_by_name( std::string_view name )
@@ -59,8 +54,26 @@ namespace nord::rbx
         return true;
     }
 
+    std::shared_ptr< data_model > task_scheduler::get_data_model()
+    {
+        std::vector< job > jobs = get_jobs_by_name( "WaitingHybridScriptsJob" );
+
+        if ( !jobs.size() )
+        {
+            log_mgr.log_error( "task_scheduler", "Unable to locate job: \"WaitingHybridScriptsJob\"" );
+            return nullptr;
+        }
+
+        return jobs.back().game();
+    }
+
     std::string task_scheduler::job::name()
     {
         return process_hook_mgr.mem.proc->read_str( get_address() + 0x10 );
+    }
+
+    std::shared_ptr< data_model > task_scheduler::job::game()
+    {
+        return std::make_shared< data_model >( process_hook_mgr.mem.proc->read< std::uintptr_t >( get_address() + 0x28 ) );
     }
 }  // namespace nord::rbx

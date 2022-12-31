@@ -25,6 +25,8 @@ namespace nord
         }
         else if ( std::holds_alternative< bool >( value ) )
             return std::string{ std::get< bool >( value ) ? "true" : "false" };
+        else if ( std::holds_alternative< std::int32_t >( value ) )
+            return std::to_string( std::get< std::int32_t >( value ) );
     }
 
     std::string configuration::serialize()

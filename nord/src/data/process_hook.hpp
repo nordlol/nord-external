@@ -3,10 +3,12 @@
 #include <Windows.h>
 
 #include <iostream>
+#include <memory>
 #include <thread>
 
 #include "../memory/memory.hpp"
 #include "../utils/logger/logger.hpp"
+#include "roblox/scheduler/task_scheduler.hpp"
 
 namespace nord
 {
@@ -30,6 +32,8 @@ namespace nord
 
         bool load_window();
 
+        // roblox classes
+        std::shared_ptr< rbx::data_model > data_model = nullptr;
        private:
         // load roblox classes
         bool load_roblox();

@@ -154,6 +154,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\data\roblox\data_model\instance.cpp" />
+    <ClCompile Include="src\data\roblox\data_model\data_model.cpp" />
     <ClCompile Include="src\data\roblox\offsets.cpp" />
     <ClCompile Include="src\imgui\imgui.cpp" />
     <ClCompile Include="src\imgui\imgui_demo.cpp" />
@@ -175,6 +177,8 @@
     <ClCompile Include="src\data\roblox\scheduler\task_scheduler.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\data\roblox\data_model\instance.hpp" />
+    <ClInclude Include="src\data\roblox\data_model\data_model.hpp" />
     <ClInclude Include="src\data\roblox\offsets.hpp" />
     <ClInclude Include="src\imgui\imconfig.h" />
     <ClInclude Include="src\imgui\imgui.h" />

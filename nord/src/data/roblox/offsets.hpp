@@ -2,8 +2,6 @@
 #include <cstdint>
 #include <memory>
 
-#include "../process_hook.hpp"
-
 namespace nord::rbx
 {
     class offsets final

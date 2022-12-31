@@ -4,9 +4,9 @@
 #include <tlhelp32.h>
 
 #include <array>
+#include <string>
 #include <variant>
 #include <vector>
-#include <string>
 
 #pragma region internal_naked_function_declarations
 #define NAKED_FUNCTION_SIGNATURE __asm { \
@@ -100,6 +100,21 @@ class xg_process
     }
 
     [[nodiscard]] std::string read_str( uintptr_t address );
+
+    template< class C >
+    [[nodiscard]] std::vector< C > read_vector( uintptr_t address )
+    {
+        // get the scope of the vector
+        auto start = read< std::uintptr_t >( address );
+        const auto end = read< std::uintptr_t >( address + 0x4 );
+
+        std::vector< C > vector;
+
+        for ( ; start < end; start += 8 )  //  +8 to skip ref
+            vector.emplace_back( read< std::uintptr_t >( start ) );
+
+        return vector;
+    }
 
     template< class C >
     void write( const uintptr_t address, C value )

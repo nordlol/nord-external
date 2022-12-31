@@ -28,7 +28,7 @@ namespace nord
             const fs::path logs{ "logs" };
             const fs::path full_path = fs::current_path() / logs;
 
-            const auto file_name = full_path / ( time_str( get_local_time(), "yyyy-MM-dd" ) + ".txt" );
+            const auto file_name = full_path / ( time_str( get_local_time(), "%Y-%m-%d" ) + ".txt" );
 
             // create directory if logs don't exists
             fs::create_directory( full_path );

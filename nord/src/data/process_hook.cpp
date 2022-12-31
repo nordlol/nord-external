@@ -1,6 +1,5 @@
 #include "process_hook.hpp"
 
-#include "roblox/scheduler/task_scheduler.hpp"
 #include "roblox/util/standard_out.hpp"
 
 namespace nord
@@ -64,10 +63,18 @@ namespace nord
 
         log_mgr.log_debug( "process_hook", "Located RBX::TaskScheduler instance at 0x%x\n", scheduler->get_address() );
 
-        if ( !scheduler->set_frame_delay() )
+        if ( !scheduler->set_frame_delay( config_mgr.get< std::int32_t >( "fps" ) ) )
             log_mgr.log_warning(
-                "process_hook", "Unable to locate frame delay offset in RBX::TaskScheduler, proceed with caution\n" );
+                "process_hook",
+                "Unable to locate frame delay offset in RBX::TaskScheduler, could be set by external process\n" );
 
+        if ( !( data_model = scheduler->get_data_model() ) )
+        {
+            log_mgr.log_error( "process_hook", "Failed to get RBX::DataModel from task scheduler\n" );
+            return false;
+        }
+        
+        log_mgr.log_debug( "process_hook", "Retrieved RBX::DataModel instance at 0x%x\n", data_model->get_address() );
         return true;
     }
 

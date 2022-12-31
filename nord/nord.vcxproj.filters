@@ -72,6 +72,12 @@
     <ClCompile Include="src\data\roblox\scheduler\task_scheduler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\data\roblox\data_model\data_model.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\data\roblox\data_model\instance.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\memory\memory.hpp">
@@ -132,6 +138,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\data\roblox\scheduler\task_scheduler.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\data\roblox\data_model\data_model.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\data\roblox\data_model\instance.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

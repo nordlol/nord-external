@@ -2,6 +2,8 @@
 
 #include <format>
 
+#include "../../process_hook.hpp"
+
 namespace nord::rbx
 {
     std::shared_ptr< standard_out > standard_out::get()
