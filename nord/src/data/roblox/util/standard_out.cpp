@@ -15,7 +15,7 @@ namespace nord::rbx
     void standard_out::print( message_type type, const char *message )
     {
         auto function = process_hook_mgr.mem.proc->create_sub< int >( offsets_mgr.print );
-        function( ( int )type, message );
+        function( static_cast< int >( type ), message );
     }
 
     void standard_out::printf( message_type type, const char *format, ... )
