@@ -175,6 +175,7 @@
     <ClCompile Include="src\utils\utilities.cpp" />
     <ClCompile Include="src\data\roblox\util\standard_out.cpp" />
     <ClCompile Include="src\data\roblox\scheduler\task_scheduler.cpp" />
+    <ClCompile Include="src\data\roblox\engine\visual_engine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\data\roblox\data_model\instance.hpp" />
@@ -199,6 +200,7 @@
     <ClInclude Include="src\utils\utilities.hpp" />
     <ClInclude Include="src\data\roblox\util\standard_out.hpp" />
     <ClInclude Include="src\data\roblox\scheduler\task_scheduler.hpp" />
+    <ClInclude Include="src\data\roblox\engine\visual_engine.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".clang-format" />

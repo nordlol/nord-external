@@ -73,8 +73,17 @@ namespace nord
             log_mgr.log_error( "process_hook", "Failed to get RBX::DataModel from task scheduler\n" );
             return false;
         }
-        
+
         log_mgr.log_debug( "process_hook", "Retrieved RBX::DataModel instance at 0x%x\n", data_model->get_address() );
+
+        if ( !( visual_engine = scheduler->get_visual_engine() ) )
+        {
+            log_mgr.log_error( "process_hook", "Failed to get RBX::Graphics::VisualEngine from task scheduler\n" );
+            return false;
+        }
+
+        log_mgr.log_debug(
+            "process_hook", "Retrieved RBX::Graphics::VisualEngine instance at 0x%x\n", visual_engine->get_address() );
         return true;
     }
 

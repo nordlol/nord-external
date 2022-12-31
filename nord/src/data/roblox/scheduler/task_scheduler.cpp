@@ -67,6 +67,25 @@ namespace nord::rbx
         return jobs.back().game();
     }
 
+    std::shared_ptr< visual_engine > task_scheduler::get_visual_engine()
+    {
+        std::vector< job > jobs = get_jobs_by_name( "Render" );
+
+        if ( !jobs.size() )
+        {
+            log_mgr.log_error( "task_scheduler", "Unable to locate job: \"Render\"" );
+            return nullptr;
+        }
+
+        const auto render_view = process_hook_mgr.mem.proc->read< std::uintptr_t >( jobs.back().get_address() + 0x148 );
+        const auto engine = process_hook_mgr.mem.proc->read< std::uintptr_t >( render_view + 0x8 );
+
+        if (engine)
+            return std::make_shared< visual_engine >( engine );
+        
+        return nullptr;
+    }
+
     std::string task_scheduler::job::name()
     {
         return process_hook_mgr.mem.proc->read_str( get_address() + 0x10 );

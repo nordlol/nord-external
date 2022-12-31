@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "../data_model/data_model.hpp"
+#include "../engine/visual_engine.hpp"
 #include "../offsets.hpp"
 
 namespace nord::rbx
@@ -33,6 +34,7 @@ namespace nord::rbx
 
         // addons
         std::shared_ptr< data_model > get_data_model();
+        std::shared_ptr< visual_engine > get_visual_engine();
 
        private:
         std::uintptr_t frame_delay_offset = 0;

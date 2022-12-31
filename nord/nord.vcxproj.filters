@@ -78,6 +78,9 @@
     <ClCompile Include="src\data\roblox\data_model\instance.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\data\roblox\engine\visual_engine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\memory\memory.hpp">
@@ -144,6 +147,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\data\roblox\data_model\instance.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\data\roblox\engine\visual_engine.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
