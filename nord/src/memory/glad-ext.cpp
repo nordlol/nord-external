@@ -19,44 +19,37 @@ xg_process::xg_process( const TCHAR* name ) : handle_( nullptr ), pid_( 0 ), bas
             if ( _stricmp( entry.szExeFile, name ) == 0 )
 #endif
             {
-                pid_ = entry.th32ProcessID;
-                handle_ = OpenProcess( PROCESS_ALL_ACCESS, FALSE, entry.th32ProcessID );
-                if ( handle_ == nullptr )
+
+                if ( entry.cntThreads > 20 )
                 {
+                    pid_ = entry.th32ProcessID;
+                    handle_ = OpenProcess( PROCESS_ALL_ACCESS, FALSE, entry.th32ProcessID );
+                    if ( handle_ == nullptr )
+                    {
 #ifdef _DEBUG
-                    printf( "OpenProcess error %x\n", GetLastError() );
+                        printf( "OpenProcess error %x\n", GetLastError() );
 #endif
-                }
-                else
-                {
-                    BOOL debugger = false;
-                    CheckRemoteDebuggerPresent( handle_, &debugger );
-
-                    if ( debugger )
-                    {
-                        CloseHandle( handle_ );
-                        continue;
                     }
-                }
 
-                const auto hsnapshot = CreateToolhelp32Snapshot( TH32CS_SNAPMODULE, entry.th32ProcessID );
-                MODULEENTRY32 me32;
-                me32.dwSize = sizeof( MODULEENTRY32 );
-                Module32First( hsnapshot, &me32 );
-                do
-                {
+                    const auto hsnapshot = CreateToolhelp32Snapshot( TH32CS_SNAPMODULE, entry.th32ProcessID );
+                    MODULEENTRY32 me32;
+                    me32.dwSize = sizeof( MODULEENTRY32 );
+                    Module32First( hsnapshot, &me32 );
+                    do
+                    {
 #ifdef UNICODE
-                    if ( wcscmp( me32.szModule, name ) == 0 )
+                        if ( wcscmp( me32.szModule, name ) == 0 )
 #else
-                    if ( _stricmp( me32.szModule, name ) == 0 )
+                        if ( _stricmp( me32.szModule, name ) == 0 )
 #endif
-                    {
-                        base_address_ = reinterpret_cast< uintptr_t >( me32.modBaseAddr );
-                        module_end_ = me32.modBaseSize;
-                        break;
-                    }
-                } while ( Module32Next( hsnapshot, &me32 ) );
-                CloseHandle( hsnapshot );
+                        {
+                            base_address_ = reinterpret_cast< uintptr_t >( me32.modBaseAddr );
+                            module_end_ = me32.modBaseSize;
+                            break;
+                        }
+                    } while ( Module32Next( hsnapshot, &me32 ) );
+                    CloseHandle( hsnapshot );
+                }
             }
         }
     }
