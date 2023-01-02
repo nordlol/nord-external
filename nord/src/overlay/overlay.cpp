@@ -103,7 +103,14 @@ namespace nord
             glfwSetWindowPos( window, process_hook_mgr.screen.x, process_hook_mgr.screen.y );
             glfwSetWindowSize( window, process_hook_mgr.screen.width, process_hook_mgr.screen.height );
 
-            render();
+            try
+            {
+                render();
+            }
+            catch ( const std::exception& e )
+            {
+                printf( "unhandled exception\n" );
+            }
 
             // key callback function
             glfw_key_callback( window );
@@ -128,16 +135,18 @@ namespace nord
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        glfwSetWindowAttrib( window, GLFW_MOUSE_PASSTHROUGH, !( overlay_mgr.show_ui && overlay_mgr.is_focused ) );
-
         const auto draw_list = ImGui::GetBackgroundDrawList();
         render_list.begin();
-        render_list.draw( draw_list );
+        //render_list.draw( draw_list );
+        draw_list->AddRectFilled( ImVec2( 0, 0 ), ImVec2( 100, 100 ), ImColor{ 255, 255, 255 } );
         render_list.clear();
         render_list.end();
 
+        glfwSetWindowAttrib( window, GLFW_MOUSE_PASSTHROUGH, !( overlay_mgr.show_ui && overlay_mgr.is_focused ) );
+
         if ( show_ui )
             menu_mgr.render();
+
         ImGui::Render();
 
         int display_w, display_h;

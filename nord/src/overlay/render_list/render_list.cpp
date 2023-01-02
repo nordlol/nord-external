@@ -2,9 +2,9 @@
 
 namespace nord::render
 {
-    void rectangle::render()
+    void rectangle::render( ImDrawList* dl )
     {
-        ImGui::GetBackgroundDrawList()->AddRect( point1, point2, col );
+        dl->AddRect( point1, point2, col );
     }
 
     void render_list::begin() noexcept
@@ -22,9 +22,9 @@ namespace nord::render
         list.clear();
     }
 
-    void render_list::draw( ImDrawList* dl ) noexcept
+    void render_list::draw( ImDrawList* dl ) 
     {
         for ( const auto item : list )
-            item->render();
+            item->render( dl );
     }
-}  // namespace nord::rbx::render
+}  // namespace nord::render

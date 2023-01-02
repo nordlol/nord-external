@@ -87,10 +87,5 @@ namespace nord
         return true;
     }
 
-    bool process_hook::destroy()
-    {
-        return true;
-    }
-
     process_hook process_hook_mgr{ L"RobloxPlayerBeta.exe", L"Roblox" };
 }  // namespace nord
