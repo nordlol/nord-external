@@ -28,6 +28,10 @@ namespace nord::rbx
         {
         }
 
+        base() : address( 0 )
+        {
+        }
+
         std::uintptr_t get_address() const
         {
             return address;

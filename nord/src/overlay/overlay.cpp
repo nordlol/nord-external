@@ -137,8 +137,7 @@ namespace nord
 
         const auto draw_list = ImGui::GetBackgroundDrawList();
         render_list.begin();
-        //render_list.draw( draw_list );
-        draw_list->AddRectFilled( ImVec2( 0, 0 ), ImVec2( 100, 100 ), ImColor{ 255, 255, 255 } );
+        render_list.draw( draw_list );
         render_list.clear();
         render_list.end();
 

@@ -35,6 +35,8 @@ namespace nord
         // roblox classes
         std::shared_ptr< rbx::data_model > data_model = nullptr;
         std::shared_ptr< rbx::visual_engine > visual_engine = nullptr;
+
+        rbx::instance players;
        private:
         // load roblox classes
         bool load_roblox();
