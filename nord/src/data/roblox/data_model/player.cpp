@@ -6,7 +6,7 @@ namespace nord::rbx
 {
     rbx::instance player::character() const
     {
-        return process_hook_mgr.mem.proc->read< std::uintptr_t >( get_address() + 0x7C );
+        return process_hook_mgr.mem.proc->read< std::uintptr_t >( get_address() + 0x6C );
     }
 
     std::tuple< part, part > player::get_parts()

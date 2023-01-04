@@ -32,15 +32,18 @@ namespace nord::render
         template< typename T, typename... Args >
         void add( const Args&... args )
         {
-            list.emplace_back( new T{ args... } );
+            temp.emplace_back( new T{ args... } );
         }
 
         void begin() noexcept;
         void end() noexcept;
         void clear() noexcept;
         void draw( ImDrawList* dl );
+        void update() noexcept;
 
        private:
+        std::vector< std::shared_ptr< base > > temp;
+
         std::vector< std::shared_ptr< base > > list;
         std::mutex mutex;
     };

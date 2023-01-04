@@ -6,7 +6,7 @@ namespace nord::rbx
 {
     std::uintptr_t part::primitive() const
     {
-        return process_hook_mgr.mem.proc->read< std::uintptr_t >( get_address() + 0xC8 );
+        return process_hook_mgr.mem.proc->read< std::uintptr_t >( get_address() + 0xB8 );
     }
 
     engine::cframe_t part::cfame() const

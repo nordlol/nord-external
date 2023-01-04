@@ -9,8 +9,10 @@ namespace nord
             {
                 while ( true )
                 {
-                    overlay_mgr.render_list.begin();
                     run_visuals();
+
+                    overlay_mgr.render_list.begin();
+                    overlay_mgr.render_list.update();
                     overlay_mgr.render_list.end();
                 }
             } );
@@ -24,8 +26,11 @@ namespace nord
         {
             const auto local_player = process_hook_mgr.players.local_player();
 
-            for ( auto player : process_hook_mgr.players.get_children_as< rbx::player >() )
+            for ( auto& player : process_hook_mgr.players.get_children_as< rbx::player >() )
             {
+                if ( player.get_address() == local_player.get_address() )
+                    continue;
+
                 const auto character = player.character();
 
                 if ( !character.get_address() )
@@ -35,7 +40,7 @@ namespace nord
 
                 if ( !head.get_address() || !root.get_address() )
                     continue;
-
+                //printf( "%x\n" , root.get_address());
                 const auto head_location = process_hook_mgr.visual_engine->world_to_screen(
                     root.cfame().translation + rbx::engine::vector3_t( 0, 0.9f, 0 ) );
 

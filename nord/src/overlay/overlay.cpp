@@ -138,7 +138,6 @@ namespace nord
         const auto draw_list = ImGui::GetBackgroundDrawList();
         render_list.begin();
         render_list.draw( draw_list );
-        render_list.clear();
         render_list.end();
 
         glfwSetWindowAttrib( window, GLFW_MOUSE_PASSTHROUGH, !( overlay_mgr.show_ui && overlay_mgr.is_focused ) );

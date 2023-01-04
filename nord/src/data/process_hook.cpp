@@ -53,7 +53,7 @@ namespace nord
         // local, won't need it globally
         std::shared_ptr< rbx::task_scheduler > scheduler = nullptr;
 
-        rbx::standard_out::get()->printf( rbx::message_type::info, "Loaded process_hook sucessfully" );
+        //rbx::standard_out::get()->printf( rbx::message_type::info, "Loaded process_hook sucessfully" );
 
         if ( !( scheduler = rbx::task_scheduler::get() ) )
         {
