@@ -1,6 +1,9 @@
 #pragma once
 
+#include <tuple>
+
 #include "instance.hpp"
+#include "part.hpp"
 
 namespace nord::rbx
 {
@@ -9,7 +12,10 @@ namespace nord::rbx
         using instance::instance;
 
        public:
-        rbx::instance character() const;
+        instance character() const;
+
+        std::tuple<part, part> get_parts();
+
        private:
     };
 }  // namespace nord::rbx

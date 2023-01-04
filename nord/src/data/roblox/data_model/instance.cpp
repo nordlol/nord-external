@@ -18,6 +18,8 @@ namespace nord::rbx
             if ( child.name() == name )
                 return child;
         }
+
+        return instance( 0 );
     }
 
     instance instance::get_child_by_class_name( std::string_view name )
@@ -27,6 +29,8 @@ namespace nord::rbx
             if ( child.descriptor().name() == name )
                 return child;
         }
+
+        return instance( 0 );
     }
 
     std::string instance::name()

@@ -4,7 +4,7 @@ namespace nord::render
 {
     void rectangle::render( ImDrawList* dl )
     {
-        dl->AddRect( point1, point2, col );
+        ImGui::GetBackgroundDrawList()->AddRect( point1, point2, col );
     }
 
     void render_list::begin() noexcept
@@ -24,7 +24,7 @@ namespace nord::render
 
     void render_list::draw( ImDrawList* dl )
     {
-        for ( auto item : list )
+        for ( const auto& item : list )
             item->render( dl );
     }
 }  // namespace nord::render

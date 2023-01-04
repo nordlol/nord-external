@@ -32,7 +32,7 @@ namespace nord::rbx
             std::vector< T > children;
 
             for ( const auto& child : get_children() )
-                children.emplace_back( child );
+                children.emplace_back( child.get_address() );
 
             return children;
         }
@@ -40,7 +40,7 @@ namespace nord::rbx
         template< typename T >
         T get_child_by_name( std::string_view name )
         {
-            return get_child_by_name( name );
+            return get_child_by_name( name ).get_address();
         }
 
         template< typename T >
