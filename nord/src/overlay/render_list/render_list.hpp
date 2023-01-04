@@ -26,6 +26,24 @@ namespace nord::render
         void render( ImDrawList* dl ) override;
     };
 
+    struct text : public base
+    {
+        text( ImVec2 pos, ImColor col, const std::string& text, bool center )
+            : pos{ pos },
+              col{ col },
+              val{ text },
+              center{ center }
+        {
+        }
+
+        std::string val;
+        ImColor col;
+        ImVec2 pos;
+        bool center;
+
+        void render( ImDrawList* dl ) override;
+    };
+
     class render_list
     {
        public:

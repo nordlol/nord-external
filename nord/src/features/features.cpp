@@ -11,9 +11,7 @@ namespace nord
                 {
                     run_visuals();
 
-                    overlay_mgr.render_list.begin();
                     overlay_mgr.render_list.update();
-                    overlay_mgr.render_list.end();
                 }
             } );
 
@@ -22,7 +20,7 @@ namespace nord
 
     void features::run_visuals()
     {
-        if ( config_mgr.get< bool >( "esp_enabled" ) )
+        if ( config_mgr.get< bool >( "esp" ) )
         {
             const auto local_player = process_hook_mgr.players.local_player();
 
@@ -54,6 +52,10 @@ namespace nord
 
                     const auto width = std::fabsf( head_y - torso_y );
                     const auto height = std::fabsf( head_y - torso_y ) * 2.2f;
+
+                    if ( config_mgr.get< bool >( "name_esp" ) )
+                        overlay_mgr.render_list.add< render::text >(
+                            ImVec2{ torso_x, torso_y - height - 15 }, ImColor{ 255, 255, 255 }, player.name(), true );
 
                     overlay_mgr.render_list.add< render::rectangle >(
                         ImVec2{ torso_x - width, torso_y + height },

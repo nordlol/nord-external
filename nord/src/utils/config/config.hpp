@@ -64,7 +64,8 @@ namespace nord
             { "ui_toggle_key", feature{ VK_INSERT } },
 
             // esp
-            { "esp_enabled", feature{ true } },
+            { "esp", feature{ true } },
+            { "name_esp", feature{ true } },
 
             // other
             { "fps", feature{ 60 } },
