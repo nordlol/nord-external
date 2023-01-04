@@ -85,7 +85,7 @@ namespace nord
         log_mgr.log_debug(
             "process_hook", "Retrieved RBX::Graphics::VisualEngine instance at 0x%x\n", visual_engine->get_address() );
 
-        players = data_model->get_child_by_class_name( "Players" );
+        players = data_model->get_child_by_class_name< rbx::players >( "Players" );
         return true;
     }
 

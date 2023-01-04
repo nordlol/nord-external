@@ -9,6 +9,7 @@
 #include "../memory/memory.hpp"
 #include "../utils/logger/logger.hpp"
 #include "roblox/scheduler/task_scheduler.hpp"
+#include "roblox/data_model/players.hpp"
 
 namespace nord
 {
@@ -36,7 +37,7 @@ namespace nord
         std::shared_ptr< rbx::data_model > data_model = nullptr;
         std::shared_ptr< rbx::visual_engine > visual_engine = nullptr;
 
-        rbx::instance players;
+        rbx::players players;
        private:
         // load roblox classes
         bool load_roblox();
