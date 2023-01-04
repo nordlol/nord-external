@@ -22,9 +22,14 @@ namespace nord::render
         list.clear();
     }
 
-    void render_list::draw( ImDrawList* dl ) 
+    void render_list::draw( ImDrawList* dl )
     {
-        for ( const auto item : list )
+        for ( const auto& item : list )
+        {
+            if ( !item )
+                continue;
+
             item->render( dl );
+        }
     }
 }  // namespace nord::render

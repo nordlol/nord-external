@@ -11,6 +11,7 @@ namespace nord::render
     struct base
     {
         virtual void render( ImDrawList* dl ) = 0;
+        virtual ~base() = default;
     };
 
     struct rectangle : public base
@@ -22,7 +23,7 @@ namespace nord::render
         ImVec2 point1, point2;
         ImColor col;
 
-        void render(ImDrawList* dl) override;
+        void render( ImDrawList* dl ) override;
     };
 
     class render_list
@@ -31,7 +32,7 @@ namespace nord::render
         template< typename T, typename... Args >
         void add( const Args&... args )
         {
-            list.emplace_back( new T{ args... } );
+            list.emplace_back(  new T{ args... });
         }
 
         void begin() noexcept;
@@ -40,7 +41,7 @@ namespace nord::render
         void draw( ImDrawList* dl );
 
        private:
-        std::vector< std::shared_ptr< base > > list;
+        std::vector< std::unique_ptr< base > > list;
         std::mutex mutex;
     };
 }  // namespace nord::render
