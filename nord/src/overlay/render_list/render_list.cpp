@@ -25,7 +25,6 @@ namespace nord::render
     void render_list::draw( ImDrawList* dl )
     {
         for ( auto item : list )
-
             item->render( dl );
     }
 }  // namespace nord::render

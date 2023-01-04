@@ -46,7 +46,7 @@ namespace nord::rbx
         template< typename T >
         T get_child_by_class_name( std::string_view name )
         {
-            return get_child_by_class_name( name );
+            return get_child_by_class_name( name ).get_address();
         }
 
         std::string name();
