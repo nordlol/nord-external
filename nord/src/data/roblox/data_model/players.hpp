@@ -10,7 +10,7 @@ namespace nord::rbx
         using instance::instance;
 
        public:
-        player get_local_player() const;
+        player local_player() const;
 
        private:
     };
