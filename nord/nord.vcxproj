@@ -154,6 +154,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\data\roblox\data_model\players.cpp" />
     <ClCompile Include="src\features\features.cpp" />
     <ClCompile Include="src\overlay\render_list\render_list.cpp" />
     <ClCompile Include="src\data\roblox\data_model\instance.cpp" />
@@ -167,6 +168,7 @@
     <ClCompile Include="src\imgui\imgui_tables.cpp" />
     <ClCompile Include="src\imgui\imgui_widgets.cpp" />
     <ClCompile Include="src\memory\glad-ext.cpp" />
+    <ClCompile Include="src\data\roblox\data_model\player.cpp" />
     <ClCompile Include="src\utils\config\config.cpp" />
     <ClCompile Include="src\overlay\menu\menu.cpp" />
     <ClCompile Include="src\utils\logger\logger.cpp" />
@@ -180,6 +182,7 @@
     <ClCompile Include="src\data\roblox\engine\visual_engine.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\data\roblox\data_model\players.hpp" />
     <ClInclude Include="src\features\features.hpp" />
     <ClInclude Include="src\overlay\render_list\render_list.hpp" />
     <ClInclude Include="src\data\roblox\data_model\instance.hpp" />
@@ -196,6 +199,7 @@
     <ClInclude Include="src\imgui\imstb_textedit.h" />
     <ClInclude Include="src\imgui\imstb_truetype.h" />
     <ClInclude Include="src\memory\glad-ext.hpp" />
+    <ClInclude Include="src\data\roblox\data_model\player.hpp" />
     <ClInclude Include="src\utils\config\config.hpp" />
     <ClInclude Include="src\overlay\menu\menu.hpp" />
     <ClInclude Include="src\utils\logger\logger.hpp" />
