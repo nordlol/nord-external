@@ -40,7 +40,7 @@ namespace nord
 
                 if ( !head.get_address() || !root.get_address() )
                     continue;
-                //printf( "%x\n" , root.get_address());
+
                 const auto head_location = process_hook_mgr.visual_engine->world_to_screen(
                     root.cfame().translation + rbx::engine::vector3_t( 0, 0.9f, 0 ) );
 
