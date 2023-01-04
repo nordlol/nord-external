@@ -7,8 +7,9 @@ namespace nord::rbx
     class player : public instance
     {
         using instance::instance;
-       public:
 
+       public:
+        rbx::instance character() const;
        private:
     };
 }  // namespace nord::rbx
