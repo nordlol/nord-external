@@ -24,11 +24,8 @@ namespace nord::render
 
     void render_list::draw( ImDrawList* dl )
     {
-        for ( const auto& item : list )
+        for (auto item : list )
         {
-            if ( !item )
-                continue;
-
             item->render( dl );
         }
     }
