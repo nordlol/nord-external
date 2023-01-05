@@ -9,13 +9,10 @@ namespace nord::render
 
     void text::render( ImDrawList* dl )
     {
-        //printf( "'%s'     %f     %f\n", val.c_str(), pos.x, ImGui::CalcTextSize( val.c_str() ).x / 2.0f );
         if ( center )
-            ImGui::GetBackgroundDrawList()->AddText(
-                ImVec2( pos.x - ImGui::CalcTextSize( val.c_str() ).x / 2.0f, pos.y ), col, val.c_str() );
+            dl->AddText( ImVec2( pos.x - ImGui::CalcTextSize( val.c_str() ).x / 2.0f, pos.y ), col, val.c_str() );
         else
-            ImGui::GetBackgroundDrawList()->AddText(
-                ImVec2( pos.x, pos.y ), col, val.c_str() );
+            dl->AddText( ImVec2( pos.x, pos.y ), col, val.c_str() );
     }
 
     void render_list::begin() noexcept
