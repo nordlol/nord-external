@@ -45,23 +45,23 @@ namespace nord
                 const auto torso_location = process_hook_mgr.visual_engine->world_to_screen(
                     root.cfame().translation - rbx::engine::vector3_t( 0, 0.4f, 0 ) );
 
-                if ( head_location.has_value() && torso_location.has_value() )
-                {
-                    const auto [ head_x, head_y ] = head_location.value();
-                    const auto [ torso_x, torso_y ] = torso_location.value();
+                if ( !head_location.has_value() && !torso_location.has_value() )
+                    continue;
 
-                    const auto width = std::fabsf( head_y - torso_y );
-                    const auto height = std::fabsf( head_y - torso_y ) * 2.2f;
+                const auto [ head_x, head_y ] = head_location.value();
+                const auto [ torso_x, torso_y ] = torso_location.value();
 
-                    if ( config_mgr.get< bool >( "name_esp" ) )
-                        overlay_mgr.render_list.add< render::text >(
-                            ImVec2{ torso_x, torso_y - height - 15 }, ImColor{ 255, 255, 255 }, player.name(), true );
+                const auto width = std::fabsf( head_y - torso_y );
+                const auto height = std::fabsf( head_y - torso_y ) * 2.2f;
 
-                    overlay_mgr.render_list.add< render::rectangle >(
-                        ImVec2{ torso_x - width, torso_y + height },
-                        ImVec2{ torso_x + width, torso_y - height },
-                        ImColor{ 255, 255, 255 } );
-                }
+                if ( config_mgr.get< bool >( "name_esp" ) )
+                    overlay_mgr.render_list.add< render::text >(
+                        ImVec2{ torso_x, torso_y - height - 15 }, ImColor{ 255, 255, 255 }, player.name(), true );
+
+                overlay_mgr.render_list.add< render::rectangle >(
+                    ImVec2{ torso_x - width, torso_y + height },
+                    ImVec2{ torso_x + width, torso_y - height },
+                    ImColor{ 255, 255, 255 } );
             }
         }
     }

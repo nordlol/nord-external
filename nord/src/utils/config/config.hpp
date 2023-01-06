@@ -24,6 +24,12 @@ namespace nord
                    key == VK_NEXT || key == VK_END || key == VK_HOME || key == VK_INSERT || key == VK_DELETE ||
                    key == VK_DIVIDE || key == VK_NUMLOCK;
         }
+
+        enum class esp_box_type
+        {
+            box_static,
+            box_dynamic
+        };
     }  // namespace settings_types
 
     class feature
@@ -42,8 +48,14 @@ namespace nord
             return std::get< T >( value );
         }
 
+        template< typename T >
+        void set_value( T nvalue )
+        {
+            value = nvalue;
+        }
+
        private:
-        std::variant< bool, float, int, ImColor, settings_types::virtual_key > value;
+        std::variant< bool, float, int, ImColor, settings_types::virtual_key, settings_types::esp_box_type > value;
     };
 
     class configuration
@@ -53,6 +65,12 @@ namespace nord
         T& get( std::string_view feature )
         {
             return feature_map.at( feature ).get_value< T >();
+        }
+
+        template< typename T >
+        void set( std::string_view feature, T value )
+        {
+            feature_map.at( feature ).set_value< T >( value );
         }
 
         // serializes feature_map to readable format
@@ -66,6 +84,7 @@ namespace nord
             // esp
             { "esp", feature{ true } },
             { "name_esp", feature{ true } },
+            { "box_esp_kind", feature{ settings_types::esp_box_type::box_dynamic } },
 
             // other
             { "fps", feature{ 60 } },
