@@ -109,7 +109,7 @@ namespace nord
             }
             catch ( const std::exception& e )
             {
-                printf( "unhandled exception\n" );
+                printf( "%s\n", e.what() );
             }
 
             // key callback function

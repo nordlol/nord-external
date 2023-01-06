@@ -7,7 +7,7 @@ namespace nord::rbx
         using instance::instance;
 
        public:
-        float get_health() const;
+        double get_health() const;
         float get_max_health() const;
 
        private:

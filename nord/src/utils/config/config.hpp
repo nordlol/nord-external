@@ -84,7 +84,7 @@ namespace nord
             // esp
             { "esp", feature{ true } },
             { "name_esp", feature{ true } },
-            { "box_esp_kind", feature{ settings_types::esp_box_type::box_dynamic } },
+            { "box_esp_dynamic", feature{ true } },
 
             // other
             { "fps", feature{ 60 } },

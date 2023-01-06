@@ -62,6 +62,7 @@ namespace nord::rbx
             return false;
         }
 
+        //get_health = process_hook_mgr.mem.proc->format( 0x8F0D80 );
         log_mgr.log_debug( "offsets", "Located RBX::Humanoid::getHealth() at 0x%x\n", get_health );
         return true;
     }

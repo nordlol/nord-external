@@ -1,5 +1,6 @@
 #include "process_hook.hpp"
 
+#include "roblox/data_model/humanoid.hpp"
 #include "roblox/util/standard_out.hpp"
 
 namespace nord
@@ -86,6 +87,8 @@ namespace nord
             "process_hook", "Retrieved RBX::Graphics::VisualEngine instance at 0x%x\n", visual_engine->get_address() );
 
         players = data_model->get_child_by_class_name< rbx::players >( "Players" );
+
+        //printf( "%f\n", players.local_player().character().get_child_by_name< rbx::humanoid >( "Humanoid" ).get_health() );
         return true;
     }
 

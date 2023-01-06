@@ -150,7 +150,7 @@ class xg_process
 #ifdef _DEBUG
             printf( "h_thread error %x\n", GetLastError() );
 #endif
-            return reinterpret_cast< C >( nullptr );
+            throw std::exception( "h_thread failed to start." );
         }
 
 #ifdef _DEBUG
@@ -175,7 +175,7 @@ class xg_process
         const auto sz = sizeof_function( reinterpret_cast< uint8_t* >( functor ) );
         const auto func_alloc = reinterpret_cast< uintptr_t >( alloc( sz ) );
         auto func_vec = get_function_vector( reinterpret_cast< uint8_t* >( functor ), func_alloc, args, call_address );
-        for ( auto i = 0; i < func_vec.size(); i++ )
+        for ( size_t i = 0; i < func_vec.size(); i++ )
         {
             write< uint8_t >( func_alloc + i, func_vec.at( i ) );
         }
@@ -239,7 +239,7 @@ class xg_process
 #pragma endregion xg_process function helpers to rebase to current base, remove retcheck, and create stubs
 
 #pragma region calling convention detection
-    enum calling_convention
+    enum class calling_convention
     {
         cdecl_,     // ret in AX, RTL
         stdcall_,   // ret in AX, LTR
