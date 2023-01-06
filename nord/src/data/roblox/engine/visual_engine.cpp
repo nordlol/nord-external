@@ -29,4 +29,23 @@ namespace nord::rbx
         return engine::vector2_t{ ( width / 2.0f ) + ( comp.x * width ) / 2.0f,
                                   ( height / 2.0f ) - ( comp.y * height ) / 2.0f };
     }
+
+    std::vector< engine::vector3_t > visual_engine::get_corners( engine::vector3_t position, engine::vector3_t size )
+    {
+        return {
+            // Back face
+            engine::vector3_t( position.x + size.x / 2, position.y + size.y / 2, position.z + size.z / 2 ),  // Top right
+            engine::vector3_t( position.x - size.x / 2, position.y + size.y / 2, position.z + size.z / 2 ),  // Top left
+
+            engine::vector3_t( position.x - size.x / 2, position.y - size.y / 2, position.z - size.z / 2 ),  // Bottom left
+            engine::vector3_t( position.x + size.x / 2, position.y - size.y / 2, position.z - size.z / 2 ),  // Bottom right
+
+            // Front face
+            engine::vector3_t( position.x - size.x / 2, position.y + size.y / 2, position.z - size.z / 2 ),
+            engine::vector3_t( position.x + size.x / 2, position.y + size.y / 2, position.z - size.z / 2 ),
+
+            engine::vector3_t( position.x - size.x / 2, position.y - size.y / 2, position.z + size.z / 2 ),
+            engine::vector3_t( position.x + size.x / 2, position.y - size.y / 2, position.z + size.z / 2 ),
+        };
+    }
 }  // namespace nord::rbx

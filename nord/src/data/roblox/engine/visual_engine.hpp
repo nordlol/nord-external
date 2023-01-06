@@ -16,7 +16,8 @@ namespace nord::rbx
         engine::vector2_t viewport() const;
 
         std::optional< engine::vector2_t > world_to_screen( const engine::vector3_t& in ) const;
-
+        
+        static std::vector<engine::vector3_t> get_corners( engine::vector3_t position, engine::vector3_t size );
        private:
     };
 }  // namespace nord::rbx
