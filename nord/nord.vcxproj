@@ -154,6 +154,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\data\roblox\data_model\humanoid.cpp" />
     <ClCompile Include="src\data\roblox\data_model\part.cpp" />
     <ClCompile Include="src\data\roblox\data_model\players.cpp" />
     <ClCompile Include="src\features\features.cpp" />
@@ -183,6 +184,7 @@
     <ClCompile Include="src\data\roblox\engine\visual_engine.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\data\roblox\data_model\humanoid.hpp" />
     <ClInclude Include="src\data\roblox\data_model\part.hpp" />
     <ClInclude Include="src\data\roblox\data_model\players.hpp" />
     <ClInclude Include="src\features\features.hpp" />
