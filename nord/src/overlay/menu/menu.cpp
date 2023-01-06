@@ -11,9 +11,18 @@ namespace nord
     {
         ImGui::Begin( "window", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse );
 
-        //ImGui::Checkbox( "ESP", config_mgr.get_ptr< bool >( "esp" ) );
+        imgui_checkbox( "esp toggle", "esp" );
 
         ImGui::End();
+    }
+
+    void menu::imgui_checkbox( const char* const name, std::string_view feature )
+    {
+        bool value = config_mgr.get< bool >( feature );
+
+        ImGui::Checkbox( name, &value );
+
+        config_mgr.set< bool >( feature, value );
     }
 
     menu menu_mgr;

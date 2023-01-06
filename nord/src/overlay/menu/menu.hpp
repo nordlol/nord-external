@@ -1,12 +1,11 @@
 #pragma once
 
+#include <iostream>
+
 #include "../../imgui/imgui.h"
 #include "../../imgui/imgui_impl_glfw.h"
 #include "../../imgui/imgui_impl_opengl3.h"
-
 #include "../../utils/config/config.hpp"
-
-#include <iostream>
 
 namespace nord
 {
@@ -18,6 +17,10 @@ namespace nord
 
         // called every iteration
         void render();
+
+       private:
+        // ImGui checkbox wrapper function
+        void imgui_checkbox( const char* const name, std::string_view feature );
     };
 
     extern menu menu_mgr;
