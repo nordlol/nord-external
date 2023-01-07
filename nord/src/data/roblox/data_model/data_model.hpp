@@ -11,6 +11,8 @@ namespace nord::rbx
         {
         }
 
+        std::int64_t game_id() const;
+
        private:
     };
 }  // namespace nord::rbx

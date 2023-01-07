@@ -8,11 +8,20 @@
 
 #include "../memory/memory.hpp"
 #include "../utils/logger/logger.hpp"
-#include "roblox/scheduler/task_scheduler.hpp"
 #include "roblox/data_model/players.hpp"
+#include "roblox/scheduler/task_scheduler.hpp"
 
 namespace nord
 {
+    typedef enum games : std::uint64_t
+    {
+        phantom_forces = 113491250,
+        bad_buisness = 1168263273,
+        rush_point = 2162282815,
+        recoil = 1534453623,
+        apocalypse_rising_2 = 358276974
+    } games_t;
+
     class process_hook final
     {
        public:
@@ -38,6 +47,7 @@ namespace nord
         std::shared_ptr< rbx::visual_engine > visual_engine = nullptr;
 
         rbx::players players;
+
        private:
         // load roblox classes
         bool load_roblox();
