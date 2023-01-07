@@ -55,7 +55,7 @@ namespace nord
         const auto torso_location = process_hook_mgr.visual_engine->world_to_screen(
             root.cfame().translation - rbx::engine::vector3_t( 0, 0.4f, 0 ) );
 
-        if ( !head_location.has_value() && !torso_location.has_value() )
+        if ( !head_location && !torso_location )
             return;
 
         const auto [ head_x, head_y ] = head_location.value();
@@ -93,7 +93,7 @@ namespace nord
         {
             const auto part_position = process_hook_mgr.visual_engine->world_to_screen( corner );
 
-            if ( !part_position.has_value() )
+            if ( !part_position )
                 return;
 
             if ( part_position.value().x > max_x )
