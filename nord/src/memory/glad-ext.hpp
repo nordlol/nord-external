@@ -110,6 +110,9 @@ class xg_process
 
         std::vector< C > vector;
 
+        if ( !start || !end || ( ( end - start ) / 8 ) > 110 )
+            return vector;
+
         for ( ; start < end; start += 8 )  //  +8 to skip ref
             vector.emplace_back( read< std::uintptr_t >( start ) );
 

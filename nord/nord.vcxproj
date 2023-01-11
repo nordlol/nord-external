@@ -158,6 +158,7 @@
     <ClCompile Include="src\data\roblox\data_model\part.cpp" />
     <ClCompile Include="src\data\roblox\data_model\players.cpp" />
     <ClCompile Include="src\features\features.cpp" />
+    <ClCompile Include="src\imgui\imgui_stdlib.cpp" />
     <ClCompile Include="src\overlay\render_list\render_list.cpp" />
     <ClCompile Include="src\data\roblox\data_model\instance.cpp" />
     <ClCompile Include="src\data\roblox\data_model\data_model.cpp" />
@@ -188,6 +189,7 @@
     <ClInclude Include="src\data\roblox\data_model\part.hpp" />
     <ClInclude Include="src\data\roblox\data_model\players.hpp" />
     <ClInclude Include="src\features\features.hpp" />
+    <ClInclude Include="src\imgui\imgui_stdlib.h" />
     <ClInclude Include="src\overlay\render_list\render_list.hpp" />
     <ClInclude Include="src\data\roblox\data_model\instance.hpp" />
     <ClInclude Include="src\data\roblox\data_model\data_model.hpp" />

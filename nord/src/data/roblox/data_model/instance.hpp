@@ -12,7 +12,7 @@ namespace nord::rbx
         using base::base;
 
        public:
-        std::string name();
+        std::string name() const;
 
        private:
     };
@@ -22,7 +22,7 @@ namespace nord::rbx
         using base::base;
 
        public:
-        [[nodiscard]] std::vector< instance > get_children();
+        [[nodiscard]] std::vector< instance > get_children() const;
         instance get_child_by_name( std::string_view name );
         instance get_child_by_class_name( std::string_view name );
 
@@ -49,8 +49,8 @@ namespace nord::rbx
             return get_child_by_class_name( name ).get_address();
         }
 
-        std::string name();
-        class_descriptor descriptor();
+        std::string name() const;
+        class_descriptor descriptor() const;
 
        private:
     };

@@ -88,6 +88,7 @@ namespace nord
 
             // other
             { "fps", feature{ 60 } },
+            { "explorer", feature{ true } },
         };
     };
 
