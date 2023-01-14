@@ -12,6 +12,8 @@ namespace nord::rbx
        public:
         player local_player() const;
 
+        // overriding
+        [[nodiscard]] std::vector< instance > get_children() const;
        private:
     };
 }  // namespace nord::rbx
