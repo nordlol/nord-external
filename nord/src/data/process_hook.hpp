@@ -47,6 +47,7 @@ namespace nord
         std::shared_ptr< rbx::visual_engine > visual_engine = nullptr;
 
         rbx::players players;
+        rbx::instance workspace;
 
        private:
         // load roblox classes

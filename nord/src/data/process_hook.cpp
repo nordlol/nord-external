@@ -87,6 +87,9 @@ namespace nord
             "process_hook", "Retrieved RBX::Graphics::VisualEngine instance at 0x%x\n", visual_engine->get_address() );
 
         players = data_model->get_child_by_class_name< rbx::players >( "Players" );
+        workspace = data_model->get_child_by_class_name< rbx::instance >( "Workspace" );
+
+        printf( "%x\n", data_model->get_address() );
         return true;
     }
 
