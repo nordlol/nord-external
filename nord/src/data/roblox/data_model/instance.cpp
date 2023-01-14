@@ -49,4 +49,9 @@ namespace nord::rbx
         const auto ptr = process_hook_mgr.mem.proc->read< std::uintptr_t >( get_address() + 0x4 );
         return process_hook_mgr.mem.proc->read_str( ptr );
     }
+
+    instance instance::parent() const
+    {
+        return process_hook_mgr.mem.proc->read< std::uintptr_t >( get_address() + 0x30 );
+    }
 }  // namespace nord::rbx

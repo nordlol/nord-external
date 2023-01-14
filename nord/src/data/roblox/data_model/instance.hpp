@@ -49,8 +49,14 @@ namespace nord::rbx
             return get_child_by_class_name( name ).get_address();
         }
 
+        bool operator==( const instance& other )
+        {
+            return this->get_address() == other.get_address();
+        }
+
         std::string name() const;
         class_descriptor descriptor() const;
+        instance parent() const;
 
        private:
     };
