@@ -27,6 +27,9 @@ namespace nord
         // renders explorer (used for debugging and fun)
         void render_explorer();
         void render_explorer_nodes( rbx::instance instance, bool require_children = false );
+        void render_explorer_properties();
+
+        rbx::instance selected;
     };
 
     extern menu menu_mgr;
