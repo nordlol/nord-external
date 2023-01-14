@@ -1,6 +1,5 @@
 #pragma once
 
-#include <GLFW/glfw3.h>
 #include <Windows.h>
 #include <dwmapi.h>
 #include <psapi.h>
