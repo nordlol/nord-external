@@ -29,6 +29,9 @@ namespace nord
                 if ( player.get_address() == local_player.get_address() )
                     continue;
 
+                if ( config_mgr.get< bool >( "team_check" ) && player.is_teammate( local_player ) )
+                    continue;
+
                 const auto character = player.character();
 
                 if ( !character.get_address() )
@@ -78,7 +81,7 @@ namespace nord
 
         for ( auto& part : player.character().get_children_as< rbx::part >() )
         {
-            if ( std::find( std::begin( body_parts ), std::end( body_parts ), part.name() ) == std::end( body_parts ) )
+            if ( !player.is_body_part( part ) )
                 continue;
 
             auto corners = rbx::visual_engine::get_corners( part.cfame().translation, part.size() );

@@ -21,33 +21,6 @@ namespace nord
         void static_box_esp( rbx::player player );
         void dynamic_box_esp( rbx::player player );
         void name_esp( float x, float y, rbx::player player );
-
-        std::array< std::string_view, 20 > body_parts = {
-            "Head",
-
-            // R16 character body parts
-            "UpperTorso",
-            "LowerTorso",
-            "LeftUpperArm",
-            "RightUpperArm",
-            "RightLowerArm",
-            "LeftLowerArm",
-            "LeftHand",
-            "RightHand",
-            "LeftUpperLeg",
-            "RightUpperLeg",
-            "LeftLowerLeg",
-            "RightLowerLeg",
-            "LeftFoot",
-            "RightFoot",
-
-            // R6 character body parts
-            "Torso",
-            "Right Arm",
-            "Left Arm",
-            "Left Leg",
-            "Right Leg",
-        };
     };
 
     extern features feature_mgr;

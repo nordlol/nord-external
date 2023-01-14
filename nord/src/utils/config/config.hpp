@@ -86,6 +86,9 @@ namespace nord
             { "name_esp", feature{ true } },
             { "box_esp_dynamic", feature{ true } },
 
+            // checks
+            { "team_check", feature{ true } },
+
             // other
             { "fps", feature{ 60 } },
             { "explorer", feature{ true } },
