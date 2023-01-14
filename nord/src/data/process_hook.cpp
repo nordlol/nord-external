@@ -89,7 +89,7 @@ namespace nord
         players = data_model->get_child_by_class_name< rbx::players >( "Players" );
         workspace = data_model->get_child_by_class_name< rbx::instance >( "Workspace" );
 
-        printf( "%x\n", data_model->get_address() );
+        printf( "%d\n", data_model->game_id() == rbx::game_t::phantom_forces );
         return true;
     }
 

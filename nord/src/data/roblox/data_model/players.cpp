@@ -11,7 +11,7 @@ namespace nord::rbx
 
     std::vector< instance > players::get_children() const
     {
-        if ( process_hook_mgr.data_model->game_id() != phantom_forces )
+        if ( process_hook_mgr.data_model->game_id() != game_t::phantom_forces )
             return instance::get_children();
 
         rbx::instance folder = process_hook_mgr.workspace.get_child_by_name< rbx::instance >( "Players" );

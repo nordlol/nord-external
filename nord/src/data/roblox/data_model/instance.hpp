@@ -22,7 +22,7 @@ namespace nord::rbx
         using base::base;
 
        public:
-        [[nodiscard]] std::vector< instance > get_children() const;
+        [[nodiscard]] virtual std::vector< instance > get_children() const;
         instance get_child_by_name( std::string_view name );
         instance get_child_by_class_name( std::string_view name );
 
@@ -52,6 +52,11 @@ namespace nord::rbx
         bool operator==( const instance& other )
         {
             return this->get_address() == other.get_address();
+        }
+
+        bool operator!()
+        {
+            return !this->get_address();
         }
 
         std::string name() const;

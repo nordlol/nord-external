@@ -4,6 +4,7 @@
 
 #include "../data/process_hook.hpp"
 #include "../utils/logger/logger.hpp"
+#include "menu/menu.hpp"
 
 #include "menu/fonts/font-awesome.h"
 #include "menu/fonts/fa-solid-900.c"

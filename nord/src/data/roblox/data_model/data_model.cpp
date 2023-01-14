@@ -4,8 +4,8 @@
 
 namespace nord::rbx
 {
-    std::int64_t data_model::game_id() const
+    game_t data_model::game_id() const
     {
-        return process_hook_mgr.mem.proc->read< std::uintptr_t >( get_address() - 12 + 0x3F0 );
+        return process_hook_mgr.mem.proc->read< game_t >( get_address() - 12 + 0x3F0 );
     }
 }
