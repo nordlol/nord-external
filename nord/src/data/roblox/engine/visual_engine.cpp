@@ -20,14 +20,19 @@ namespace nord::rbx
 
         engine::vector4_t comp = view_matrix() * in;
 
-        if ( comp.w < 0.001f )
-            return std::nullopt;
+        if ( comp.w >= 0.001f )
+        {
+            comp.x /= comp.w;
+            comp.y /= comp.w;
 
-        comp.x /= comp.w;
-        comp.y /= comp.w;
+            const auto& ret = engine::vector2_t{ ( width / 2.0f ) + ( comp.x * width ) / 2.0f,
+                                                 ( height / 2.0f ) - ( comp.y * height ) / 2.0f };
 
-        return engine::vector2_t{ ( width / 2.0f ) + ( comp.x * width ) / 2.0f,
-                                  ( height / 2.0f ) - ( comp.y * height ) / 2.0f };
+            if ( ret.x < 0 || ret.y < 0 || ret.x > comp.x || ret.y > comp.y )
+                return ret;
+        }
+
+        return std::nullopt;
     }
 
     std::vector< engine::vector3_t > visual_engine::get_corners( engine::vector3_t position, engine::vector3_t size )

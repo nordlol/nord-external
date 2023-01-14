@@ -1,7 +1,7 @@
 #pragma once
 
 #include <tuple>
-#include <array>
+#include <unordered_set>
 
 #include "instance.hpp"
 #include "part.hpp"
@@ -15,13 +15,13 @@ namespace nord::rbx
        public:
         instance character() const;
         instance team() const;
-        bool is_teammate(player player) const;
+        bool is_teammate( player player ) const;
 
         std::tuple< part, part > get_parts();
         bool is_body_part( const rbx::part& part );
 
        private:
-        std::array< std::string_view, 20 > regular_body_parts = {
+        std::unordered_set< std::string_view > regular_body_parts = {
             "Head",
 
             // R16 character body parts

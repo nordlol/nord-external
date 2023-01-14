@@ -4,6 +4,7 @@
 
 #include "../data/process_hook.hpp"
 #include "../utils/logger/logger.hpp"
+#include "menu/menu.hpp"
 
 #define IS_RENDERABLE ( process_hook_mgr.window_active || overlay_mgr.is_focused )
 

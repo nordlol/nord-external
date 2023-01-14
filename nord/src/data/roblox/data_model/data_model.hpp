@@ -4,6 +4,15 @@
 
 namespace nord::rbx
 {
+    enum class game_t : std::uint64_t
+    {
+        phantom_forces = 113491250,
+        bad_buisness = 1168263273,
+        rush_point = 2162282815,
+        recoil = 1534453623,
+        apocalypse_rising_2 = 358276974
+    };
+
     class data_model : public instance
     {
        public:
@@ -11,7 +20,7 @@ namespace nord::rbx
         {
         }
 
-        std::int64_t game_id() const;
+        game_t game_id() const;
 
        private:
     };

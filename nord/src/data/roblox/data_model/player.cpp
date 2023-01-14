@@ -6,7 +6,7 @@ namespace nord::rbx
 {
     rbx::instance player::character() const
     {
-        if ( process_hook_mgr.data_model->game_id() != phantom_forces )
+        if ( process_hook_mgr.data_model->game_id() != game_t::phantom_forces )
             return process_hook_mgr.mem.proc->read< std::uintptr_t >( get_address() + 0x6C );
 
         return *this;
@@ -37,8 +37,7 @@ namespace nord::rbx
 
     bool player::is_body_part( const rbx::part& part )
     {
-        return std::find( std::begin( regular_body_parts ), std::end( regular_body_parts ), part.name() ) !=
-               std::end( regular_body_parts );
+        return regular_body_parts.find( part.name() ) != regular_body_parts.end();
     }
 
 }  // namespace nord::rbx
