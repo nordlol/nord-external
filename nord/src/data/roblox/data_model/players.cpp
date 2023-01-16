@@ -16,7 +16,17 @@ namespace nord::rbx
 
         rbx::instance folder = process_hook_mgr.workspace.get_child_by_name< rbx::instance >( "Players" );
 
-        return folder.get_child_by_name( local_player().team().name() == "Ghosts" ? "Bright blue" : "Bright orange" )
-            .get_children();
+        std::vector< rbx::instance > children;
+
+        for ( const auto& child : folder.get_children() )
+        {
+            for ( const auto& character : child.get_children() )
+                children.push_back( character );
+        }
+
+        return children;
+
+        //return folder.get_child_by_name( local_player().team().name() == "Ghosts" ? "Bright blue" : "Bright orange" )
+        //    .get_children();
     }
 }  // namespace nord::rbx

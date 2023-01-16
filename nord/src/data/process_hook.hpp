@@ -41,6 +41,7 @@ namespace nord
         rbx::players players;
         rbx::workspace workspace;
         rbx::camera camera;
+        rbx::instance teams;
 
        private:
         // load roblox classes

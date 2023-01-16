@@ -41,6 +41,8 @@ namespace nord
                 if ( player.get_address() == local_player.get_address() )
                     continue;
 
+                //printf( "%x %x\n", player.team().get_address(), local_player.team().get_address() );
+                //printf( "%d\n", player.is_teammate( local_player ) );
                 if ( config_mgr.get< bool >( "team_check" ) && player.is_teammate( local_player ) )
                     continue;
 
@@ -144,8 +146,9 @@ namespace nord
         if ( config_mgr.get< bool >( "name_esp" ) )
         {
             const auto size = config_mgr.get< bool >( "autoscale_names" ) ? clamp_distance( distance, 12 ) : 0.0f;
- 
-            overlay_mgr.render_list.add< render::text >( ImVec2{ x, y }, size, ImColor{ 255, 255, 255 }, player.name(), true );
+
+            overlay_mgr.render_list.add< render::text >(
+                ImVec2{ x, y }, size, ImColor{ 255, 255, 255 }, player.name(), true );
         }
     }
 

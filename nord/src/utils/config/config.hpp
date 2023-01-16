@@ -88,7 +88,7 @@ namespace nord
             { "name_esp", feature{ true } },
             { "autoscale_names", feature{ true } },
 
-            { "render_distance", feature{ 250 } },
+            { "render_distance", feature{ 500 } },
             { "ally_color", feature{ ImColor{ 85, 170, 255 } } },
             { "enemy_color", feature{ ImColor{ 255, 170, 255 } } },
 
@@ -102,7 +102,7 @@ namespace nord
 
             // other
             { "fps", feature{ 60 } },
-            { "explorer", feature{ true } },
+            { "explorer", feature{ false } },
         };
     };
 
