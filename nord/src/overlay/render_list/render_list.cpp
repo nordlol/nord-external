@@ -16,6 +16,11 @@ namespace nord::render
             dl->AddText( nullptr, size, ImVec2( pos.x, pos.y ), col, val.c_str() );
     }
 
+    void circle::render( ImDrawList* dl )
+    {
+        dl->AddCircle( ImVec2( position.x, position.y), radius, col );
+    }
+
     void render_list::begin() noexcept
     {
         mutex.lock();

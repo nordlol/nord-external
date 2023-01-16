@@ -63,6 +63,7 @@ namespace nord
         bool create_section( const char* name );
         bool checkmark( const char* label, const char* Desc, bool* v );
         bool slider( const char* label, const char* type, int* v, int v_min, int v_max );
+        bool slider( const char* label, const char* type, float* v, int v_min, int v_max );
         bool dropdown( const char* label, int* current_item, const char* const items[], int items_count, int height_in_items );
         bool color_edit( const char* name, ImColor* col );
     };

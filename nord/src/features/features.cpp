@@ -22,6 +22,16 @@ namespace nord
 
     void features::run_visuals()
     {
+        if ( config_mgr.get< bool >( "fov_circle" ) )
+        {
+            rbx::engine::vector2_t screen = process_hook_mgr.visual_engine->viewport();
+
+            overlay_mgr.render_list.add< render::circle >(
+                ImVec2{ screen.x / 2, screen.y / 2 },
+                config_mgr.get< float >( "fov_size" ),
+                config_mgr.get< ImColor >( "fov_color" ) );
+        }
+
         if ( config_mgr.get< bool >( "player_esp" ) )
         {
             const auto local_player = process_hook_mgr.players.local_player();

@@ -26,6 +26,18 @@ namespace nord::render
         void render( ImDrawList* dl ) override;
     };
 
+    struct circle : public base
+    {
+        circle( ImVec2 position, float radius, ImColor col ) : position{ position }, radius{ radius }, col{ col }
+        {
+        }
+
+        ImVec2 position;
+        float radius;
+        ImColor col;
+        void render( ImDrawList* dl ) override;
+    };
+
     struct text : public base
     {
         text( ImVec2 pos, float size, ImColor col, const std::string& text, bool center )

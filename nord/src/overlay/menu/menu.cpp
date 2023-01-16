@@ -1419,6 +1419,17 @@ namespace nord
         return true;
     }
 
+    bool menu::slider( const char* label, const char* type, float* v, int v_min, int v_max )
+    {
+        ImGui::NewLine();
+
+        ImGui::PushFont( widget_normal );
+        menu_mgr_utils::SliderFloat( label, type, v, v_min, v_max, 0, 0 );
+        ImGui::PopFont();
+
+        return true;
+    }
+
     bool
     menu::dropdown( const char* label, int* current_item, const char* const items[], int items_count, int height_in_items )
     {
@@ -1557,6 +1568,11 @@ namespace nord
                             {
                                 color_edit( "Ally color", &config_mgr.get< ImColor >( "ally_color" ) );
                                 color_edit( "Enemy color", &config_mgr.get< ImColor >( "enemy_color" ) );
+                                color_edit( "FOV color", &config_mgr.get< ImColor >( "fov_color" ) );
+                                checkmark(
+                                    "Show FOV",
+                                    "Renders a circle in middlg of screen visualizing FOV",
+                                    &config_mgr.get< bool >( "fov_circle" ) );
                                 checkmark(
                                     "Team check",
                                     "Renders players if they are on an opposing team only.",
@@ -1566,6 +1582,7 @@ namespace nord
                                     "Only renders visuals within render distance of the camera.",
                                     &config_mgr.get< bool >( "distance_check" ) );
                                 slider( "Render distance", "studs", &config_mgr.get< int >( "render_distance" ), 25, 1000 );
+                                slider( "FOV size", "", &config_mgr.get< float >( "fov_size" ), 100, 1000 );
                                 /*
 
                                    heres how to use the other funcs for u
