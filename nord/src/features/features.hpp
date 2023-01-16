@@ -23,6 +23,7 @@ namespace nord
         void name_esp( float x, float y, rbx::player player, std::int32_t distance );
 
         float clamp_distance( std::int32_t distance, std::int32_t clamp );
+        ImColor get_player_color( rbx::player player, bool teammate );
     };
 
     extern features feature_mgr;

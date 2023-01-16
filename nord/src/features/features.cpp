@@ -41,13 +41,12 @@ namespace nord
                 if ( player.get_address() == local_player.get_address() )
                     continue;
 
-                //printf( "%x %x\n", player.team().get_address(), local_player.team().get_address() );
-                //printf( "%d\n", player.is_teammate( local_player ) );
+                // printf( "%x %x\n", player.team().get_address(), local_player.team().get_address() );
+                // printf( "%d\n", player.is_teammate( local_player ) );
                 if ( config_mgr.get< bool >( "team_check" ) && player.is_teammate( local_player ) )
                     continue;
 
-                ImColor color = player.is_teammate( local_player ) ? config_mgr.get< ImColor >( "ally_color" )
-                                                                   : config_mgr.get< ImColor >( "enemy_color" );
+                ImColor color = get_player_color( player, player.is_teammate( local_player ) );
 
                 const auto character = player.character();
 
@@ -69,6 +68,14 @@ namespace nord
                     static_box_esp( player, color, distance );
             }
         }
+    }
+
+    ImColor features::get_player_color( rbx::player player, bool teammate )
+    {
+        if ( config_mgr.get< bool >( "use_team_color" ) )
+            return player.team().team_color().color();
+
+        return teammate ? config_mgr.get< ImColor >( "ally_color" ) : config_mgr.get< ImColor >( "enemy_color" );
     }
 
     void features::static_box_esp( rbx::player player, ImColor color, std::int32_t distance )

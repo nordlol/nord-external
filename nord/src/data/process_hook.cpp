@@ -1,6 +1,7 @@
 #include "process_hook.hpp"
 
 #include "roblox/data_model/humanoid.hpp"
+#include "roblox/data_model/team.hpp"
 #include "roblox/util/standard_out.hpp"
 
 namespace nord

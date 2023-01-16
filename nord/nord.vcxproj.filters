@@ -117,6 +117,12 @@
     <ClCompile Include="src\data\roblox\data_model\camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\data\roblox\data_model\team.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\data\roblox\util\brick_color.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\memory\memory.hpp">
@@ -222,6 +228,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\data\roblox\data_model\camera.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\data\roblox\data_model\team.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\data\roblox\util\brick_color.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

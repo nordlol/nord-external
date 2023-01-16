@@ -4,7 +4,7 @@
 
 namespace nord::rbx
 {
-    rbx::instance player::character() const
+    instance player::character() const
     {
         if ( process_hook_mgr.data_model->game_id() != game_t::phantom_forces )
             return process_hook_mgr.mem.proc->read< std::uintptr_t >( get_address() + 0x6C );
@@ -12,19 +12,19 @@ namespace nord::rbx
         return *this;
     }
 
-    rbx::instance player::team() const
+    rbx::team player::team() const
     {
         if ( process_hook_mgr.data_model->game_id() == game_t::phantom_forces &&
              parent().get_address() != process_hook_mgr.players.get_address() )
         {
             const auto name = this->parent().name() == "Bright blue" ? "Phantoms" : "Ghosts";
-            return process_hook_mgr.teams.get_child_by_name( name );
+            return process_hook_mgr.teams.get_child_by_name< rbx::team >( name );
         }
 
         const auto address = process_hook_mgr.mem.proc->read< std::uintptr_t >( get_address() + 0xA0 );
 
         if ( !address )
-            return rbx::instance( 0 );
+            return rbx::team( 0 );
 
         return address;
     }

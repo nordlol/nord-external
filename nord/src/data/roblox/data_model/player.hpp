@@ -5,6 +5,7 @@
 
 #include "instance.hpp"
 #include "part.hpp"
+#include "team.hpp"
 
 namespace nord::rbx
 {
@@ -14,7 +15,7 @@ namespace nord::rbx
 
        public:
         instance character() const;
-        instance team() const;
+        team team() const;
         bool is_teammate( player player ) const;
 
         std::tuple< part, part > get_parts();

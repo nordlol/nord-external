@@ -154,6 +154,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\data\roblox\util\brick_color.cpp" />
     <ClCompile Include="src\data\roblox\data_model\camera.cpp" />
     <ClCompile Include="src\data\roblox\data_model\humanoid.cpp" />
     <ClCompile Include="src\data\roblox\data_model\part.cpp" />
@@ -188,8 +189,10 @@
     <ClCompile Include="src\data\roblox\scheduler\task_scheduler.cpp" />
     <ClCompile Include="src\data\roblox\engine\visual_engine.cpp" />
     <ClCompile Include="src\data\roblox\data_model\workspace.cpp" />
+    <ClCompile Include="src\data\roblox\data_model\team.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\data\roblox\util\brick_color.hpp" />
     <ClInclude Include="src\data\roblox\data_model\camera.hpp" />
     <ClInclude Include="src\data\roblox\data_model\humanoid.hpp" />
     <ClInclude Include="src\data\roblox\data_model\part.hpp" />
@@ -225,6 +228,7 @@
     <ClInclude Include="src\data\roblox\scheduler\task_scheduler.hpp" />
     <ClInclude Include="src\data\roblox\engine\visual_engine.hpp" />
     <ClInclude Include="src\data\roblox\data_model\workspace.hpp" />
+    <ClInclude Include="src\data\roblox\data_model\team.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".clang-format" />

@@ -91,6 +91,7 @@ namespace nord
             { "render_distance", feature{ 500 } },
             { "ally_color", feature{ ImColor{ 85, 170, 255 } } },
             { "enemy_color", feature{ ImColor{ 255, 170, 255 } } },
+            { "use_team_color", feature{ false } },
 
             { "fov_circle", feature{ true } },
             { "fov_color", feature{ ImColor{ 255, 255, 255 } } },

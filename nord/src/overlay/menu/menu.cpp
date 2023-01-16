@@ -1568,6 +1568,10 @@ namespace nord
                             {
                                 color_edit( "Ally color", &config_mgr.get< ImColor >( "ally_color" ) );
                                 color_edit( "Enemy color", &config_mgr.get< ImColor >( "enemy_color" ) );
+                                checkmark(
+                                    "Use team color",
+                                    "Uses in game team colors for player esp.",
+                                    &config_mgr.get< bool >( "use_team_color" ) );
                                 color_edit( "FOV color", &config_mgr.get< ImColor >( "fov_color" ) );
                                 checkmark(
                                     "Show FOV",
