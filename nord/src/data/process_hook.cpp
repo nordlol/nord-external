@@ -87,9 +87,8 @@ namespace nord
             "process_hook", "Retrieved RBX::Graphics::VisualEngine instance at 0x%x\n", visual_engine->get_address() );
 
         players = data_model->get_child_by_class_name< rbx::players >( "Players" );
-        workspace = data_model->get_child_by_class_name< rbx::instance >( "Workspace" );
-
-        printf( "%d\n", data_model->game_id() == rbx::game_t::phantom_forces );
+        workspace = data_model->get_child_by_class_name< rbx::workspace >( "Workspace" );
+        camera = workspace.current_camera();
         return true;
     }
 

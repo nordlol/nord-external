@@ -1,5 +1,7 @@
 #include "features.hpp"
 
+#include "../overlay/menu/menu.hpp"
+
 namespace nord
 {
     void features::start()
@@ -20,7 +22,7 @@ namespace nord
 
     void features::run_visuals()
     {
-        if ( config_mgr.get< bool >( "esp" ) )
+        if ( config_mgr.get< bool >( "player_esp" ) )
         {
             const auto local_player = process_hook_mgr.players.local_player();
 
@@ -32,20 +34,32 @@ namespace nord
                 if ( config_mgr.get< bool >( "team_check" ) && player.is_teammate( local_player ) )
                     continue;
 
+                ImColor color = player.is_teammate( local_player ) ? config_mgr.get< ImColor >( "ally_color" )
+                                                                   : config_mgr.get< ImColor >( "enemy_color" );
+
                 const auto character = player.character();
 
                 if ( !character.get_address() )
                     continue;
 
+                const auto distance = process_hook_mgr.camera.get_distance_from( player.get_root_part() );
+
+                if ( config_mgr.get< bool >( "distance_check" ) && distance >= config_mgr.get< int >( "render_distance" ) )
+                    continue;
+
+                // Specating or other weird stuff
+                if ( distance <= 10 )
+                    continue;
+
                 if ( config_mgr.get< bool >( "box_esp_dynamic" ) )
-                    dynamic_box_esp( player );
+                    dynamic_box_esp( player, color, distance );
                 else
-                    static_box_esp( player );
+                    static_box_esp( player, color, distance );
             }
         }
     }
 
-    void features::static_box_esp( rbx::player player )
+    void features::static_box_esp( rbx::player player, ImColor color, std::int32_t distance )
     {
         const auto [ head, root ] = player.get_parts();
 
@@ -67,15 +81,13 @@ namespace nord
         const auto width = std::fabsf( head_y - torso_y );
         const auto height = std::fabsf( head_y - torso_y ) * 2.2f;
 
-        name_esp( torso_x, torso_y - height - 15, player );
+        name_esp( torso_x, torso_y - height - 15, player, distance );
 
         overlay_mgr.render_list.add< render::rectangle >(
-            ImVec2{ torso_x - width, torso_y + height },
-            ImVec2{ torso_x + width, torso_y - height },
-            ImColor{ 255, 255, 255 } );
+            ImVec2{ torso_x - width, torso_y + height }, ImVec2{ torso_x + width, torso_y - height }, color );
     }
 
-    void features::dynamic_box_esp( rbx::player player )
+    void features::dynamic_box_esp( rbx::player player, ImColor color, std::int32_t distance )
     {
         std::vector< rbx::engine::vector3_t > all_corners;
 
@@ -112,18 +124,32 @@ namespace nord
                 min_y = part_position.value().y;
         }
 
-        name_esp( ( max_x - min_x ) / 2 + min_x, min_y - 15, player );
+        name_esp( ( max_x - min_x ) / 2 + min_x, min_y - 15, player, distance );
 
-        overlay_mgr.render_list.add< render::rectangle >(
-            ImVec2{ max_x, max_y }, ImVec2{ min_x, min_y }, ImColor{ 255, 255, 255 } );
+        overlay_mgr.render_list.add< render::rectangle >( ImVec2{ max_x, max_y }, ImVec2{ min_x, min_y }, color );
     }
 
-    void features::name_esp( float x, float y, rbx::player player )
+    void features::name_esp( float x, float y, rbx::player player, std::int32_t distance )
     {
         if ( config_mgr.get< bool >( "name_esp" ) )
         {
-            overlay_mgr.render_list.add< render::text >( ImVec2{ x, y }, ImColor{ 255, 255, 255 }, player.name(), true );
+            const auto size = config_mgr.get< bool >( "autoscale_names" ) ? clamp_distance( distance, 12 ) : 0.0f;
+ 
+            overlay_mgr.render_list.add< render::text >( ImVec2{ x, y }, size, ImColor{ 255, 255, 255 }, player.name(), true );
         }
+    }
+
+    float features::clamp_distance( std::int32_t distance, std::int32_t clamp )
+    {
+        const auto size = 1 / distance * 1000;
+
+        if ( size < 0 )
+            return 0;
+
+        if ( size > clamp )
+            return clamp;
+
+        return size;
     }
 
     features feature_mgr;

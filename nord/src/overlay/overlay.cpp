@@ -4,13 +4,11 @@
 
 #include "../data/process_hook.hpp"
 #include "../utils/logger/logger.hpp"
-#include "menu/menu.hpp"
-
-#include "menu/fonts/font-awesome.h"
-#include "menu/fonts/fa-solid-900.c"
 #include "menu/fonts/Inter-Regular.c"
 #include "menu/fonts/Inter-SemiBold.c"
-
+#include "menu/fonts/fa-solid-900.c"
+#include "menu/fonts/font-awesome.h"
+#include "menu/menu.hpp"
 #define STB_IMAGE_IMPLEMENTATION
 #include "../imgui/stb.h"
 
@@ -98,8 +96,7 @@ namespace nord
         int image_width = 0;
         int image_height = 0;
 
-        unsigned char* image_data = stbi_load_from_memory(
-            LOGO, sizeof( LOGO ), &image_width, &image_height, NULL, 4 );
+        unsigned char* image_data = stbi_load_from_memory( LOGO, sizeof( LOGO ), &image_width, &image_height, NULL, 4 );
 
         if ( image_data == NULL )
             return false;
@@ -193,7 +190,7 @@ namespace nord
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
 
-         ImGuiIO& io = ImGui::GetIO();
+        ImGuiIO& io = ImGui::GetIO();
         ( void )io;
 
         io.FontDefault = io.Fonts->AddFontFromMemoryTTF( inter, sizeof( inter ), 17.0f );
@@ -273,10 +270,12 @@ namespace nord
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
+        ImGui::PushFont( menu_mgr.widget_normal );
         const auto draw_list = ImGui::GetBackgroundDrawList();
         render_list.begin();
         render_list.draw( draw_list );
         render_list.end();
+        ImGui::PopFont();
 
         glfwSetWindowAttrib( window, GLFW_MOUSE_PASSTHROUGH, !( overlay_mgr.show_ui && overlay_mgr.is_focused ) );
 

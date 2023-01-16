@@ -897,16 +897,17 @@ namespace menu_mgr_utils
         //	ImGui::PushItemWidth((alpha_bar ? bar1_pos_x : bar0_pos_x) + bars_width - picker_pos.x);
         //	ImGuiColorEditFlags sub_flags_to_forward = ImGuiColorEditFlags__DataTypeMask | ImGuiColorEditFlags__InputMask
         //| ImGuiColorEditFlags_HDR | ImGuiColorEditFlags_NoAlpha | ImGuiColorEditFlags_NoOptions |
-        //ImGuiColorEditFlags_NoSmallPreview | ImGuiColorEditFlags_AlphaPreview | ImGuiColorEditFlags_AlphaPreviewHalf;
+        // ImGuiColorEditFlags_NoSmallPreview | ImGuiColorEditFlags_AlphaPreview | ImGuiColorEditFlags_AlphaPreviewHalf;
         //	ImGuiColorEditFlags sub_flags = (flags & sub_flags_to_forward) | ImGuiColorEditFlags_NoPicker;
         //	if (flags & ImGuiColorEditFlags_DisplayRGB || (flags & ImGuiColorEditFlags__DisplayMask) == 0)
         //		if (ImGui::ColorEdit4("##rgb", col, sub_flags | ImGuiColorEditFlags_DisplayRGB))
         //		{
-        //			// FIXME: Hackily differentiating using the DragInt (ActiveId != 0 && !ActiveIdAllowOverlap) vs.
-        //using the InputText or DropTarget.
-        //			// For the later we don't want to run the hue-wrap canceling code. If you are well versed in HSV
-        //picker please provide your input! (See #2050) 			value_changed_fix_hue_wrap = (g.ActiveId != 0 &&
-        //!g.ActiveIdAllowOverlap); 			value_changed = true;
+        //			// FIXME: Hackily differentiating using the DragInt (ActiveId != 0 && !ActiveIdAllowOverlap)
+        // vs. using the InputText or DropTarget.
+        //			// For the later we don't want to run the hue-wrap canceling code. If you are well versed in
+        // HSV picker please provide your input! (See #2050) 			value_changed_fix_hue_wrap = (g.ActiveId != 0
+        // &&
+        //! g.ActiveIdAllowOverlap); 			value_changed = true;
         //		}
         //	if (flags & ImGuiColorEditFlags_DisplayHex || (flags & ImGuiColorEditFlags__DisplayMask) == 0)
         //		value_changed |= ImGui::ColorEdit4("##hex", col, sub_flags | ImGuiColorEditFlags_DisplayHex);
@@ -1171,7 +1172,7 @@ namespace nord
         return true;
     }
 
-	bool menu::create_tab(
+    bool menu::create_tab(
         const char* label,
         const char* icon,
         const bool selected,
@@ -1281,7 +1282,7 @@ namespace nord
         return true;
     }
 
-    bool menu::create_top_holder( const char* name )
+    bool menu::create_top_holder( const char* name, bool fill )
     {
         ImGui::SetCursorPosX( ImGui::GetCursorPosX() + 120 );
         ImGui::SetCursorPosY( ImGui::GetCursorPosY() + 5 );
@@ -1296,6 +1297,16 @@ namespace nord
     {
         ImGui::SetCursorPosX( ImGui::GetCursorPosX() - 110 );
         ImGui::SetCursorPosY( ImGui::GetCursorPosY() + 70 );
+        ImGui::BeginChild(
+            name, ImVec2( 430, 415 ), false, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse );
+
+        return true;
+    }
+
+    bool menu::create_section( const char* name )
+    {
+        ImGui::SetCursorPosX( ImGui::GetCursorPosX() + 10 );
+        ImGui::SetCursorPosY( ImGui::GetCursorPosY() + 10 );
         ImGui::BeginChild(
             name, ImVec2( 430, 415 ), false, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse );
 
@@ -1399,6 +1410,8 @@ namespace nord
 
     bool menu::slider( const char* label, const char* type, int* v, int v_min, int v_max )
     {
+        ImGui::NewLine();
+
         ImGui::PushFont( widget_normal );
         menu_mgr_utils::SliderInt( label, type, v, v_min, v_max, 0, 0 );
         ImGui::PopFont();
@@ -1406,23 +1419,19 @@ namespace nord
         return true;
     }
 
-    bool menu::dropdown(
-       const char* label,
-       int* current_item,
-       const char* const items[],
-       int items_count,
-       int height_in_items )
+    bool
+    menu::dropdown( const char* label, int* current_item, const char* const items[], int items_count, int height_in_items )
     {
-       ImGui::PushFont( widget_small );
+        ImGui::PushFont( widget_small );
 
-       const bool value_changed = menu_mgr_utils::ComboA(
+        const bool value_changed = menu_mgr_utils::ComboA(
             label, current_item, menu_mgr_utils::Items_ArrayGetter, ( void* )items, items_count, height_in_items );
-       ImGui::PopFont();
+        ImGui::PopFont();
 
-       return value_changed;
+        return value_changed;
     }
 
-    bool menu::color_edit( const char* name, float* col )
+    bool menu::color_edit( const char* name, ImColor* col )
     {
         ImGui::Spacing();
         ImGui::Spacing();
@@ -1433,9 +1442,15 @@ namespace nord
 
         ImGui::Text( name );
         ImGui::SameLine( ImGui::GetContentRegionAvail().x - 26 );
-        ImGui::ColorEdit4(
-            name, col, ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoBorder );
 
+        float color[ 4 ] = { ( *col ).Value.x, ( *col ).Value.y, ( *col ).Value.z, ( *col ).Value.w };
+
+        ImGui::PushStyleVar( ImGuiStyleVar_FrameRounding, 5.0f );
+        ImGui::ColorEdit4( name, color, ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_NoInputs );
+
+        *col = ImColor{ color[ 0 ], color[ 1 ], color[ 2 ], color[ 3 ] };
+
+        ImGui::PopStyleVar();
         ImGui::PopFont();
 
         ImGui::Spacing();
@@ -1455,16 +1470,16 @@ namespace nord
         {
             if ( create_tab_bar() )
             {
-                if ( create_tab( ( "VISUALS" ), ICON_FA_USER, tab == 0, 25, false, ImVec2( 50, 45 ) ) )
+                if ( create_tab( ( "VISUALS" ), ICON_FA_EYE, tab == 0, 25, false, ImVec2( 50, 45 ) ) )
                     tab = 0;
-            
-                if ( create_tab( ( "AIMBOT" ), ICON_FA_GEAR, tab == 1, 25, false, ImVec2( 50, 45 ) ) )
+
+                if ( create_tab( ( "SETTINGS" ), ICON_FA_GEAR, tab == 1, 25, false, ImVec2( 50, 45 ) ) )
                     tab = 1;
 
                 end();
             }
-          
-			if ( tab == 1 ) // Visuals
+
+            if ( tab == 0 )  // Visuals
             {
                 if ( create_holder( "##blank" ) )
                 {
@@ -1486,48 +1501,117 @@ namespace nord
                         end();
                     }
 
-                    if ( tab_2 == 0 )
+                    switch ( tab_2 )
                     {
-                        if ( create_bottom_section( "Players" ) )
+                        case 0:
                         {
-                            checkmark( ( "esp toggle" ), ( "enable esp" ), &config_mgr.get< bool >( "esp" ) );
+                            if ( create_bottom_section( "Players" ) )
+                            {
+                                checkmark(
+                                    ( "Player esp" ),
+                                    ( "Main toggle for all player visuals." ),
+                                    &config_mgr.get< bool >( "player_esp" ) );
 
-                            /*
-                            
-                               heres how to use the other funcs for u
+                                static int combo = config_mgr.get< bool >( "box_esp_dynamic" );
+                                const char* items[ 2 ] = { "Static", "Dynamic" };
+                                dropdown( "Box esp type", &combo, items, 2, 0 );
+                                config_mgr.get< bool >( "box_esp_dynamic" ) = combo;
 
-                               static int combo = 0;
-	                           const char* combo_items[6] = { "None", "ihateu", "cysucks", "nicksicks", "celestialsucks", "idkanymore" };	                       
-                               dropdown("Type", &combo, combo_items, 6, 0); 
+                                ImGui::NewLine();
 
-                               static int val;
-                               slider("Line Width", "studs", &val, 0, 1000);
+                                checkmark(
+                                    ( "Name esp" ),
+                                    ( "Draws the player's name above them." ),
+                                    &config_mgr.get< bool >( "name_esp" ) );
+                                checkmark(
+                                    ( "Autoscale names" ),
+                                    ( "Player names will scale based on camera distance." ),
+                                    &config_mgr.get< bool >( "autoscale_names" ) );
 
-                               static float color[4] = { 1.f, 1.f, 1.f, 1.f };
-                               color_edit("bye", color);
-                            */
+                                /*
 
-                            end();
+                                   heres how to use the other funcs for u
+
+                                   static int combo = 0;
+                                       const char* combo_items[6] = { "None", "ihateu", "cysucks", "nicksicks",
+                                   "celestialsucks", "idkanymore" }; dropdown("Type", &combo, combo_items, 6, 0);
+
+                                   static int val;
+                                   slider("Line Width", "studs", &val, 0, 1000);
+
+                                   static float color[4] = { 1.f, 1.f, 1.f, 1.f };
+                                   color_edit("bye", color);
+                                */
+
+                                end();
+                            }
+                            break;
+                        }
+                        case 1:
+                        {
+                            break;
+                        }
+                        case 2:
+                        {
+                            if ( create_bottom_section( "Others" ) )
+                            {
+                                color_edit( "Ally color", &config_mgr.get< ImColor >( "ally_color" ) );
+                                color_edit( "Enemy color", &config_mgr.get< ImColor >( "enemy_color" ) );
+                                checkmark(
+                                    "Team check",
+                                    "Renders players if they are on an opposing team only.",
+                                    &config_mgr.get< bool >( "team_check" ) );
+                                checkmark(
+                                    "Distance check",
+                                    "Only renders visuals within render distance of the camera.",
+                                    &config_mgr.get< bool >( "distance_check" ) );
+                                slider( "Render distance", "studs", &config_mgr.get< int >( "render_distance" ), 25, 1000 );
+                                /*
+
+                                   heres how to use the other funcs for u
+
+                                   static int combo = 0;
+                                       const char* combo_items[6] = { "None", "ihateu", "cysucks", "nicksicks",
+                                   "celestialsucks", "idkanymore" }; dropdown("Type", &combo, combo_items, 6, 0);
+
+                                   static int val;
+                                   slider("Line Width", "studs", &val, 0, 1000);
+
+                                   static float color[4] = { 1.f, 1.f, 1.f, 1.f };
+                                   color_edit("bye", color);
+                                */
+
+                                end();
+                            }
+                            break;
                         }
                     }
 
                     end();
                 }
             }
+            else if ( tab == 1 )
+            {
+                if ( create_holder( "##blank" ) )
+                {
+                    if ( create_section( "settings" ) )
+                    {
+                        checkmark(
+                            ( "Explorer toggle" ),
+                            ( "Shows a simple explorer that allows you to inspect Roblox's data model." ),
+                            &config_mgr.get< bool >( "explorer" ) );
+
+                        end();
+                    }
+                }
+            }
 
             end();
         }
 
-
         if ( config_mgr.get< bool >( "explorer" ) )
             render_explorer();
-
-        ImGui::Begin( "window", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse );
-
-        imgui_checkbox( "esp toggle", "esp" );
-        imgui_checkbox( "explorer toggle", "explorer" );
-
-        ImGui::End();
+        ;
     }
 
     void menu::imgui_checkbox( const char* const name, std::string_view feature )

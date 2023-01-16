@@ -58,12 +58,13 @@ namespace nord
             const ImVec2& size_arg );
 
         bool create_holder( const char* holder );
-        bool create_top_holder( const char* name );
+        bool create_top_holder( const char* name, bool fill = true );
         bool create_bottom_section( const char* name );
+        bool create_section( const char* name );
         bool checkmark( const char* label, const char* Desc, bool* v );
         bool slider( const char* label, const char* type, int* v, int v_min, int v_max );
         bool dropdown( const char* label, int* current_item, const char* const items[], int items_count, int height_in_items );
-        bool color_edit(const char* name, float* col);
+        bool color_edit( const char* name, ImColor* col );
     };
 
     extern menu menu_mgr;

@@ -10,6 +10,7 @@
 #include "../utils/logger/logger.hpp"
 #include "roblox/data_model/players.hpp"
 #include "roblox/scheduler/task_scheduler.hpp"
+#include "roblox/data_model/workspace.hpp"
 
 namespace nord
 {
@@ -38,7 +39,8 @@ namespace nord
         std::shared_ptr< rbx::visual_engine > visual_engine = nullptr;
 
         rbx::players players;
-        rbx::instance workspace;
+        rbx::workspace workspace;
+        rbx::camera camera;
 
        private:
         // load roblox classes

@@ -30,9 +30,14 @@ namespace nord::rbx
     std::tuple< part, part > player::get_parts()
     {
         const auto head = character().get_child_by_name< part >( "Head" );
-        const auto torso = character().get_child_by_name< part >( "HumanoidRootPart" );
+        const auto torso = get_root_part();
 
         return std::make_tuple( head, torso );
+    }
+
+    part player::get_root_part()
+    {
+        return character().get_child_by_name< part >( "HumanoidRootPart" );
     }
 
     bool player::is_body_part( const rbx::part& part )

@@ -102,27 +102,23 @@ void xg_process::dealloc( LPVOID const address ) const
 #pragma endregion xg_process allocation / deallocation
 
 #pragma region memory access
-[[nodiscard]] std::string xg_process::read_str( const uintptr_t address )
+[[nodiscard]] std::string xg_process::read_str( uintptr_t address )
 {
     const auto size = read< size_t >( address + 0x10 );
 
     if ( size >= 16 )
-    {
-        std::string str;
+        address = read< std::uintptr_t >( address );
 
-        auto heap_ptr = read< std::uintptr_t >( address );
+    std::string str;
 
-        // Iterate through each byte from the current position to the size prefix,
-        // add it to the string object and return it
-        BYTE c = 0;
+    // Iterate through each byte from the current position to the size prefix,
+    // add it to the string object and return it
+    BYTE c = 0;
 
-        for ( std::int32_t i = 0; c = read< std::uint8_t >( heap_ptr + i ); i++ )
-            str.push_back( c );
+    for ( std::int32_t i = 0; c = read< std::uint8_t >( address + i ); i++ )
+        str.push_back( c );
 
-        return str;
-    }
-
-    return read< std::string >( address );
+    return str;
 }
 #pragma endregion read / write memory
 
@@ -212,8 +208,8 @@ std::vector< uint8_t > xg_process::get_function_vector(
                 else if ( std::holds_alternative< bool >( val ) )
                 {
                     ret.push_back( 0x6A );  // one byte push (bool is one byte)
-                    // 6A			01 + PUSH	imm8										Push
-                    // Word, Doubleword or Quadword Onto the Stack
+                    // 6A			01 + PUSH	imm8
+                    // Push Word, Doubleword or Quadword Onto the Stack
                     ret.push_back( std::get< bool >( val ) );
                 }
                 else if ( std::holds_alternative< const char* >( val ) )

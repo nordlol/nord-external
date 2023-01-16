@@ -28,14 +28,16 @@ namespace nord::render
 
     struct text : public base
     {
-        text( ImVec2 pos, ImColor col, const std::string& text, bool center )
+        text( ImVec2 pos, float size, ImColor col, const std::string& text, bool center )
             : pos{ pos },
+              size{ size },
               col{ col },
               val{ text },
               center{ center }
         {
         }
 
+        float size;
         std::string val;
         ImColor col;
         ImVec2 pos;

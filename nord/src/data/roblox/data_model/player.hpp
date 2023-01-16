@@ -18,6 +18,8 @@ namespace nord::rbx
         bool is_teammate( player player ) const;
 
         std::tuple< part, part > get_parts();
+        part get_root_part();
+
         bool is_body_part( const rbx::part& part );
 
        private:

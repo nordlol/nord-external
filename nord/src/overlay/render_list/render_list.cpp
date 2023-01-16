@@ -10,9 +10,10 @@ namespace nord::render
     void text::render( ImDrawList* dl )
     {
         if ( center )
-            dl->AddText( ImVec2( pos.x - ImGui::CalcTextSize( val.c_str() ).x / 2.0f, pos.y ), col, val.c_str() );
+            dl->AddText(
+                nullptr, size, ImVec2( pos.x - ImGui::CalcTextSize( val.c_str() ).x / 2.0f, pos.y ), col, val.c_str() );
         else
-            dl->AddText( ImVec2( pos.x, pos.y ), col, val.c_str() );
+            dl->AddText( nullptr, size, ImVec2( pos.x, pos.y ), col, val.c_str() );
     }
 
     void render_list::begin() noexcept

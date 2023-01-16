@@ -82,12 +82,19 @@ namespace nord
             { "ui_toggle_key", feature{ VK_INSERT } },
 
             // esp
-            { "esp", feature{ true } },
-            { "name_esp", feature{ true } },
+            { "player_esp", feature{ true } },
             { "box_esp_dynamic", feature{ true } },
+            
+            { "name_esp", feature{ true } },
+            { "autoscale_names", feature{ true } },
+
+            { "render_distance", feature{ 250 } },
+            { "ally_color", feature{ ImColor{ 85, 170, 255 } } },
+            { "enemy_color", feature{ ImColor{ 255, 170, 255 } } },
 
             // checks
             { "team_check", feature{ true } },
+            { "distance_check", feature{ true } },
 
             // other
             { "fps", feature{ 60 } },
