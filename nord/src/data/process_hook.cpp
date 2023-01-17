@@ -43,6 +43,15 @@ namespace nord
         return true;
     }
 
+    rbx::engine::vector2_t process_hook::get_mouse_position()
+    {
+        POINT position;
+        GetCursorPos( &position );
+        ScreenToClient( window, &position );
+
+        return { static_cast< float >( position.x ), static_cast< float >( position.y ) };
+    }
+
     bool process_hook::load_roblox()
     {
         // init offsets as we have a handle and module
@@ -51,9 +60,6 @@ namespace nord
             log_mgr.log_error( "process_hook", "Failed to initialize offsets\n" );
             return false;
         }
-
-        // local, won't need it globally
-        std::shared_ptr< rbx::task_scheduler > scheduler = nullptr;
 
         rbx::standard_out::get()->printf( rbx::message_type::info, "Loaded process_hook sucessfully" );
 
@@ -65,7 +71,7 @@ namespace nord
 
         log_mgr.log_debug( "process_hook", "Located RBX::TaskScheduler instance at 0x%x\n", scheduler->get_address() );
 
-        if ( !scheduler->set_frame_delay( config_mgr.get< std::int32_t >( "fps" ) ) )
+        if ( !scheduler->set_frame_delay( config_mgr.get< bool >( "fps_unlocked" ) ? -1 : 60 ) )
             log_mgr.log_warning(
                 "process_hook",
                 "Unable to locate frame delay offset in RBX::TaskScheduler, could be set by external process\n" );

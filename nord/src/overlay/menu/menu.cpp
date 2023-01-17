@@ -1297,8 +1297,8 @@ namespace nord
     {
         ImGui::SetCursorPosX( ImGui::GetCursorPosX() - 110 );
         ImGui::SetCursorPosY( ImGui::GetCursorPosY() + 70 );
-        ImGui::BeginChild(
-            name, ImVec2( 430, 415 ), false, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse );
+
+        ImGui::BeginChild( name, ImVec2( 430, 415 ), false, ImGuiWindowFlags_NoScrollbar );
 
         return true;
     }
@@ -1528,8 +1528,6 @@ namespace nord
                                 dropdown( "Box esp type", &combo, items, 2, 0 );
                                 config_mgr.get< bool >( "box_esp_dynamic" ) = combo;
 
-                                ImGui::NewLine();
-
                                 checkmark(
                                     ( "Name esp" ),
                                     ( "Draws the player's name above them." ),
@@ -1538,6 +1536,13 @@ namespace nord
                                     ( "Autoscale names" ),
                                     ( "Player names will scale based on camera distance." ),
                                     &config_mgr.get< bool >( "autoscale_names" ) );
+                                color_edit( "Names color", &config_mgr.get< ImColor >( "name_esp_color" ) );
+
+                                checkmark(
+                                    "Snaplines",
+                                    "Draws lines to a designated aim target for each player in FOV.",
+                                    &config_mgr.get< bool >( "snaplines" ) );
+                                color_edit( "Snaplines color", &config_mgr.get< ImColor >( "snaplines_color" ) );
 
                                 /*
 
@@ -1572,11 +1577,18 @@ namespace nord
                                     "Use team color",
                                     "Uses in game team colors for player esp.",
                                     &config_mgr.get< bool >( "use_team_color" ) );
+
                                 color_edit( "FOV color", &config_mgr.get< ImColor >( "fov_color" ) );
                                 checkmark(
                                     "Show FOV",
                                     "Renders a circle in middlg of screen visualizing FOV",
                                     &config_mgr.get< bool >( "fov_circle" ) );
+                                slider( "FOV size", "", &config_mgr.get< float >( "fov_size" ), 5, 1000 );
+                                dropdown< settings_types::fov_type >(
+                                    "FOV type",
+                                    &config_mgr.get< settings_types::fov_type >( "fov_type" ),
+                                    settings_types::fov_type_string );
+
                                 checkmark(
                                     "Team check",
                                     "Renders players if they are on an opposing team only.",
@@ -1586,21 +1598,6 @@ namespace nord
                                     "Only renders visuals within render distance of the camera.",
                                     &config_mgr.get< bool >( "distance_check" ) );
                                 slider( "Render distance", "studs", &config_mgr.get< int >( "render_distance" ), 25, 1000 );
-                                slider( "FOV size", "", &config_mgr.get< float >( "fov_size" ), 100, 1000 );
-                                /*
-
-                                   heres how to use the other funcs for u
-
-                                   static int combo = 0;
-                                       const char* combo_items[6] = { "None", "ihateu", "cysucks", "nicksicks",
-                                   "celestialsucks", "idkanymore" }; dropdown("Type", &combo, combo_items, 6, 0);
-
-                                   static int val;
-                                   slider("Line Width", "studs", &val, 0, 1000);
-
-                                   static float color[4] = { 1.f, 1.f, 1.f, 1.f };
-                                   color_edit("bye", color);
-                                */
 
                                 end();
                             }
@@ -1621,6 +1618,13 @@ namespace nord
                             ( "Explorer toggle" ),
                             ( "Shows a simple explorer that allows you to inspect Roblox's data model." ),
                             &config_mgr.get< bool >( "explorer" ) );
+
+                        checkmark(
+                            ( "Unlock FPS" ),
+                            ( "Unlocks your in game fps. When disabled fps limit is 60." ),
+                            &config_mgr.get< bool >( "fps_unlocked" ) );
+
+                        process_hook_mgr.scheduler->set_frame_delay( config_mgr.get< bool >( "fps_unlocked" ) ? -1 : 60 );
 
                         end();
                     }

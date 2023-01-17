@@ -1,17 +1,17 @@
 #pragma once
 
+#include <GLFW/glfw3.h>
+
 #include <iostream>
+#include <map>
 
 #include "../../data/roblox/data_model/instance.hpp"
 #include "../../imgui/imgui.h"
-#include "../../imgui/imgui_internal.h"
 #include "../../imgui/imgui_impl_glfw.h"
 #include "../../imgui/imgui_impl_opengl3.h"
+#include "../../imgui/imgui_internal.h"
 #include "../../imgui/imgui_stdlib.h"
 #include "../../utils/config/config.hpp"
-
-#include <GLFW/glfw3.h>
-#include <map>
 
 namespace nord
 {
@@ -35,7 +35,7 @@ namespace nord
 
         rbx::instance selected;
 
-        public:
+       public:
         GLuint logo_texture = 0;
         ImFont* widget_normal = 0;
         ImFont* widget_small = 0;
@@ -64,7 +64,22 @@ namespace nord
         bool checkmark( const char* label, const char* Desc, bool* v );
         bool slider( const char* label, const char* type, int* v, int v_min, int v_max );
         bool slider( const char* label, const char* type, float* v, int v_min, int v_max );
-        bool dropdown( const char* label, int* current_item, const char* const items[], int items_count, int height_in_items );
+        bool
+        dropdown( const char* label, int* current_item, const char* const items[], int items_count, int height_in_items );
+
+        template< class _Enum >
+        bool dropdown( const char* const label, _Enum* v, const char* const items[] )
+        {
+            static std::int32_t selected = static_cast< std::int32_t >( *v );
+            const auto count = static_cast< std::int32_t >( _Enum::_size );
+
+            bool ret = dropdown( label, &selected, items, count, 0 );
+
+            *v = static_cast< _Enum >( selected );
+
+            return ret;
+        }
+
         bool color_edit( const char* name, ImColor* col );
     };
 

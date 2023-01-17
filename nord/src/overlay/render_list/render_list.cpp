@@ -18,7 +18,20 @@ namespace nord::render
 
     void circle::render( ImDrawList* dl )
     {
-        dl->AddCircle( ImVec2( position.x, position.y), radius, col );
+        dl->AddCircle( ImVec2( position.x, position.y ), radius, col );
+    }
+
+    void triangle::render( ImDrawList* dl )
+    {
+        if ( filled )
+            dl->AddTriangleFilled( point1, point2, point3, col );
+        else
+            dl->AddTriangle( point1, point2, point3, col, thickness );
+    }
+
+    void line::render( ImDrawList* dl )
+    {
+        dl->AddLine( point1, point2, col, thickness );
     }
 
     void render_list::begin() noexcept

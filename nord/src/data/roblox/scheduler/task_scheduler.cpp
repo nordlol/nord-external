@@ -50,7 +50,7 @@ namespace nord::rbx
         }
 
         process_hook_mgr.mem.proc->write< double >(
-            get_address() + frame_delay_offset, delay ? 1.0 / delay : 1.0 / 10000.0 );
+            get_address() + frame_delay_offset, delay > 0 ? 1.0 / delay : 1.0 / 10000.0 );
         return true;
     }
 

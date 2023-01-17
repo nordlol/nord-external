@@ -9,8 +9,8 @@
 #include "../memory/memory.hpp"
 #include "../utils/logger/logger.hpp"
 #include "roblox/data_model/players.hpp"
-#include "roblox/scheduler/task_scheduler.hpp"
 #include "roblox/data_model/workspace.hpp"
+#include "roblox/scheduler/task_scheduler.hpp"
 
 namespace nord
 {
@@ -35,6 +35,7 @@ namespace nord
         bool load_window();
 
         // roblox classes
+        std::shared_ptr< rbx::task_scheduler > scheduler = nullptr;
         std::shared_ptr< rbx::data_model > data_model = nullptr;
         std::shared_ptr< rbx::visual_engine > visual_engine = nullptr;
 
@@ -42,6 +43,8 @@ namespace nord
         rbx::workspace workspace;
         rbx::camera camera;
         rbx::instance teams;
+
+        rbx::engine::vector2_t get_mouse_position();
 
        private:
         // load roblox classes

@@ -277,6 +277,17 @@ namespace nord::rbx
     ImColor brick_color::color()
     {
         const std::vector< brick_map::color_info >& colors = brick_map::get().map;
-        return colors[ static_cast< std::int32_t >( number ) ].color;
+
+        const auto n = static_cast< std::int32_t >( number );
+
+        if ( ( n <= static_cast< std::int32_t >( brick_color::brick_number::roblox_1032 ) &&
+               n >= static_cast< std::int32_t >( brick_color::brick_number::roblox_1001 ) ) &&
+             ( n <= static_cast< std::int32_t >( brick_color::brick_number::brick_365 ) &&
+               n >= static_cast< std::int32_t >( brick_color::brick_number::brick_301 ) ) &&
+             ( n <= static_cast< std::int32_t >( brick_color::brick_number::brick_268 ) &&
+               n >= static_cast< std::int32_t >( brick_color::brick_number::brick_1 ) ) )
+            return colors[ static_cast< std::int32_t >( number ) ].color;
+        
+        return ImColor{ 255, 255, 255 };
     }
 }  // namespace nord::rbx

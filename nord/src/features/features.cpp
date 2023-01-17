@@ -22,27 +22,15 @@ namespace nord
 
     void features::run_visuals()
     {
-        if ( config_mgr.get< bool >( "fov_circle" ) )
-        {
-            rbx::engine::vector2_t screen = process_hook_mgr.visual_engine->viewport();
-
-            overlay_mgr.render_list.add< render::circle >(
-                ImVec2{ screen.x / 2, screen.y / 2 },
-                config_mgr.get< float >( "fov_size" ),
-                config_mgr.get< ImColor >( "fov_color" ) );
-        }
-
         if ( config_mgr.get< bool >( "player_esp" ) )
         {
             const auto local_player = process_hook_mgr.players.local_player();
 
-            for ( auto& player : process_hook_mgr.players.get_children_as< rbx::player >() )
+            for ( const auto& player : process_hook_mgr.players.get_children_as< rbx::player >() )
             {
                 if ( player.get_address() == local_player.get_address() )
                     continue;
 
-                // printf( "%x %x\n", player.team().get_address(), local_player.team().get_address() );
-                // printf( "%d\n", player.is_teammate( local_player ) );
                 if ( config_mgr.get< bool >( "team_check" ) && player.is_teammate( local_player ) )
                     continue;
 
@@ -59,13 +47,54 @@ namespace nord
                     continue;
 
                 // Specating or other weird stuff
-                if ( distance <= 10 )
+                if ( distance <= 5 )
                     continue;
 
                 if ( config_mgr.get< bool >( "box_esp_dynamic" ) )
                     dynamic_box_esp( player, color, distance );
                 else
                     static_box_esp( player, color, distance );
+            }
+        }
+
+        draw_fov_circle();
+    }
+
+    void features::draw_fov_circle()
+    {
+        if ( config_mgr.get< bool >( "fov_circle" ) )
+        {
+            const auto fov = config_mgr.get< float >( "fov_size" );
+
+            ImVec2 pos = get_fov_center();
+
+            overlay_mgr.render_list.add< render::circle >( pos, fov, config_mgr.get< ImColor >( "fov_color" ) );
+        }
+    }
+
+    void features::draw_snapline( rbx::engine::vector2_t pos, const ImVec2& head, const ImVec2& torso )
+    {
+        const auto& [ x, y ] = process_hook_mgr.visual_engine->viewport();
+        const auto fov = config_mgr.get< float >( "fov_size" );
+
+        if ( config_mgr.get< bool >( "snaplines" ) )
+        {
+            switch ( config_mgr.get< settings_types::aim_target >( "aim_target" ) )
+            {
+                case settings_types::aim_target::head:
+                {
+                    if ( pos.distance( { head.x, head.y } ) < fov )
+                        overlay_mgr.render_list.add< render::line >(
+                            ImVec2{ pos.x, pos.y }, head, config_mgr.get< ImColor >( "snaplines_color" ) );
+                    break;
+                }
+                case settings_types::aim_target::torso:
+                {
+                    if ( pos.distance( { torso.x, torso.y } ) < fov )
+                        overlay_mgr.render_list.add< render::line >(
+                            ImVec2{ pos.x, pos.y }, torso, config_mgr.get< ImColor >( "snaplines_color" ) );
+                    break;
+                }
             }
         }
     }
@@ -76,6 +105,27 @@ namespace nord
             return player.team().team_color().color();
 
         return teammate ? config_mgr.get< ImColor >( "ally_color" ) : config_mgr.get< ImColor >( "enemy_color" );
+    }
+
+    rbx::engine::vector2_t features::get_fov_center()
+    {
+        const auto& [ x, y ] = process_hook_mgr.visual_engine->viewport();
+
+        ImVec2 pos{};
+
+        switch ( config_mgr.get< settings_types::fov_type >( "fov_type" ) )
+        {
+            case settings_types::fov_type::center:
+            {
+                return { x / 2.0f, y / 2.0f };
+            }
+            case settings_types::fov_type::cursor:
+            {
+                return process_hook_mgr.get_mouse_position();
+            }
+        }
+
+        return { -1, -1 };
     }
 
     void features::static_box_esp( rbx::player player, ImColor color, std::int32_t distance )
@@ -94,13 +144,17 @@ namespace nord
         if ( !head_location && !torso_location )
             return;
 
-        const auto [ head_x, head_y ] = head_location.value();
-        const auto [ torso_x, torso_y ] = torso_location.value();
+        const auto [ head_x, head_y ] = *head_location;
+        const auto [ torso_x, torso_y ] = *torso_location;
 
         const auto width = std::fabsf( head_y - torso_y );
         const auto height = std::fabsf( head_y - torso_y ) * 2.2f;
 
+        if ( std::isnan( width ) || std::isnan( height ) )
+            return;
+
         name_esp( torso_x, torso_y - height - 15, player, distance );
+        draw_snapline( get_fov_center(), ImVec2{ head_x, head_y }, ImVec2{ torso_x, torso_y } );
 
         overlay_mgr.render_list.add< render::rectangle >(
             ImVec2{ torso_x - width, torso_y + height }, ImVec2{ torso_x + width, torso_y - height }, color );
@@ -130,20 +184,23 @@ namespace nord
             if ( !part_position )
                 return;
 
-            if ( part_position.value().x > max_x )
-                max_x = part_position.value().x;
+            if ( ( *part_position ).x > max_x )
+                max_x = ( *part_position ).x;
 
-            if ( part_position.value().y > max_y )
-                max_y = part_position.value().y;
+            if ( ( *part_position ).y > max_y )
+                max_y = ( *part_position ).y;
 
-            if ( part_position.value().x < min_x )
-                min_x = part_position.value().x;
+            if ( ( *part_position ).x < min_x )
+                min_x = ( *part_position ).x;
 
-            if ( part_position.value().y < min_y )
-                min_y = part_position.value().y;
+            if ( ( *part_position ).y < min_y )
+                min_y = ( *part_position ).y;
         }
 
         name_esp( ( max_x - min_x ) / 2 + min_x, min_y - 15, player, distance );
+
+        auto [ head, torso ] = player.get_part_screen_locations();
+        draw_snapline( get_fov_center(), head, torso );
 
         overlay_mgr.render_list.add< render::rectangle >( ImVec2{ max_x, max_y }, ImVec2{ min_x, min_y }, color );
     }
@@ -155,7 +212,7 @@ namespace nord
             const auto size = config_mgr.get< bool >( "autoscale_names" ) ? clamp_distance( distance, 12 ) : 0.0f;
 
             overlay_mgr.render_list.add< render::text >(
-                ImVec2{ x, y }, size, ImColor{ 255, 255, 255 }, player.name(), true );
+                ImVec2{ x, y }, size, config_mgr.get< ImColor >( "name_esp_color" ), player.name(), true );
         }
     }
 

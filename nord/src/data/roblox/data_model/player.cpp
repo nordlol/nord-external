@@ -42,7 +42,26 @@ namespace nord::rbx
         return std::make_tuple( head, torso );
     }
 
-    part player::get_root_part()
+    std::tuple< engine::vector2_t, engine::vector2_t > player::get_part_screen_locations()
+    {
+        const auto& [ head, torso ] = get_parts();
+
+        engine::vector2_t head_pos{ -1, -1 };
+        engine::vector2_t torso_pos{ -1, -1 };
+
+        if ( !head.get_address() || !torso.get_address() )
+            return std::make_tuple( head_pos, torso_pos );
+
+        const auto head_screen = process_hook_mgr.visual_engine->world_to_screen( head.cfame().translation );
+        const auto torso_screen = process_hook_mgr.visual_engine->world_to_screen( torso.cfame().translation );
+
+        if ( !head_screen || !torso_screen )
+            return std::make_tuple( head_pos, torso_pos );
+
+        return std::make_tuple( *head_screen, *torso_screen );
+    }
+
+    part player::get_root_part() const
     {
         return character().get_child_by_name< part >( "HumanoidRootPart" );
     }

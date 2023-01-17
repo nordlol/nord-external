@@ -244,7 +244,8 @@ namespace nord
             }
             catch ( const std::exception& e )
             {
-                printf( "%s\n", e.what() );
+                log_mgr.log_error( "overlay", "unexpected: %s\n", e.what() );
+                return false;
             }
 
             // key callback function

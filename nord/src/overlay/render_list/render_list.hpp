@@ -14,6 +14,23 @@ namespace nord::render
         virtual ~base() = default;
     };
 
+    struct line : public base
+    {
+        line( ImVec2 point1, ImVec2 point2, ImColor col, float thickness = 1.0f )
+            : point1{ point1 },
+              point2{ point2 },
+              col{ col },
+              thickness{ thickness }
+        {
+        }
+
+        ImVec2 point1, point2;
+        ImColor col;
+        float thickness;
+
+        void render( ImDrawList* dl ) override;
+    };
+
     struct rectangle : public base
     {
         rectangle( ImVec2 point1, ImVec2 point2, ImColor col ) : point1{ point1 }, point2{ point2 }, col{ col }
@@ -35,6 +52,30 @@ namespace nord::render
         ImVec2 position;
         float radius;
         ImColor col;
+
+        void render( ImDrawList* dl ) override;
+    };
+
+    struct triangle : public base
+    {
+        triangle( ImVec2 point1, ImVec2 point2, ImVec2 point3, ImColor col, float thickness = 1.0f, bool filled = false )
+            : point1{ point1 },
+              point2{ point2 },
+              point3{ point3 },
+              col{ col },
+              thickness{ thickness },
+              filled{ filled }
+
+        {
+        }
+
+        ImVec2 point1;
+        ImVec2 point2;
+        ImVec2 point3;
+        ImColor col;
+        float thickness;
+        bool filled;
+
         void render( ImDrawList* dl ) override;
     };
 

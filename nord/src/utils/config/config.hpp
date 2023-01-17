@@ -25,11 +25,25 @@ namespace nord
                    key == VK_DIVIDE || key == VK_NUMLOCK;
         }
 
-        enum class esp_box_type
+        enum class fov_type
         {
-            box_static,
-            box_dynamic
+            center,
+            cursor,
+
+            _size
         };
+
+        const char* const fov_type_string[ 2 ] = { "Center Screen", "Cursor" };
+
+        enum class aim_target
+        {
+            head,
+            torso,
+
+            _size
+        };
+
+        const char* const aim_target_string[ 2 ] = { "Head", "Torso" };
     }  // namespace settings_types
 
     class feature
@@ -55,7 +69,15 @@ namespace nord
         }
 
        private:
-        std::variant< bool, float, int, ImColor, settings_types::virtual_key, settings_types::esp_box_type > value;
+        std::variant<
+            bool,
+            float,
+            int,
+            ImColor,
+            settings_types::virtual_key,
+            settings_types::fov_type,
+            settings_types::aim_target >
+            value;
     };
 
     class configuration
@@ -84,9 +106,13 @@ namespace nord
             // esp
             { "player_esp", feature{ true } },
             { "box_esp_dynamic", feature{ true } },
-            
+
+            { "snaplines", feature{ true } },
+            { "snaplines_color", feature{ ImColor{ 255, 255, 255 } } },
+
             { "name_esp", feature{ true } },
             { "autoscale_names", feature{ true } },
+            { "name_esp_color", feature{ ImColor{ 255, 255, 255 } } },
 
             { "render_distance", feature{ 500 } },
             { "ally_color", feature{ ImColor{ 85, 170, 255 } } },
@@ -94,15 +120,19 @@ namespace nord
             { "use_team_color", feature{ false } },
 
             { "fov_circle", feature{ true } },
+            { "fov_type", feature{ settings_types::fov_type::center } },
             { "fov_color", feature{ ImColor{ 255, 255, 255 } } },
             { "fov_size", feature{ 100.f } },
+
+            // aim
+            { "aim_target", feature{ settings_types::aim_target::head } },
 
             // checks
             { "team_check", feature{ true } },
             { "distance_check", feature{ true } },
 
             // other
-            { "fps", feature{ 60 } },
+            { "fps_unlocked", feature{ false } },
             { "explorer", feature{ false } },
         };
     };
