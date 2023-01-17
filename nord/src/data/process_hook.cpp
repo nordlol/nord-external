@@ -97,6 +97,8 @@ namespace nord
         workspace = data_model->get_child_by_class_name< rbx::workspace >( "Workspace" );
         camera = workspace.current_camera();
         teams = data_model->get_child_by_name( "Teams" );
+
+        printf( "%d\n", data_model->game_id() == rbx::game_t::phantom_forces );
         return true;
     }
 
