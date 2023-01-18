@@ -43,9 +43,10 @@ namespace nord
 
                 const auto distance = process_hook_mgr.camera.get_distance_from( player.get_root_part() );
 
-                if ( config_mgr.get< bool >( "distance_check" ) && distance >= config_mgr.get< int >( "render_distance" ) &&
-                     distance <= 5 )
+                if ( config_mgr.get< bool >( "distance_check" ) &&
+                     ( distance >= config_mgr.get< int >( "render_distance" ) || distance <= 5 ) )
                     continue;
+
 
                 if ( config_mgr.get< bool >( "box_esp_dynamic" ) )
                     dynamic_box_esp( player, color, distance );

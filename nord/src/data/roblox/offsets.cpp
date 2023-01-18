@@ -15,8 +15,8 @@ namespace nord::rbx
         if ( !init_get_health() )
             return false;
 
-        if ( !init_get_max_health() )
-            return false;
+        //if ( !init_get_max_health() )
+        //    return false;
 
         log_mgr.log_debug( "offsets", "Successfully initialized offsets\n" );
         return true;
