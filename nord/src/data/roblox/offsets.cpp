@@ -15,7 +15,7 @@ namespace nord::rbx
         if ( !init_get_health() )
             return false;
 
-        //if ( !init_get_max_health() )
+        // if ( !init_get_max_health() )
         //    return false;
 
         log_mgr.log_debug( "offsets", "Successfully initialized offsets\n" );
@@ -62,7 +62,7 @@ namespace nord::rbx
             return false;
         }
 
-        //get_health = process_hook_mgr.mem.proc->format( 0x8F0D80 );
+        // get_health = process_hook_mgr.mem.proc->format( 0x8F0D80 );
         log_mgr.log_debug( "offsets", "Located RBX::Humanoid::getHealth() at 0x%x\n", get_health );
         return true;
     }
