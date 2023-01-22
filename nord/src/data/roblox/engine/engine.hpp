@@ -9,16 +9,6 @@ const auto pi = std::numbers::pi_v< float >;
 
 namespace nord::rbx::engine
 {
-    struct vector4_t
-    {
-        float x, y, z, w;
-
-        vector4_t() = default;
-        vector4_t( float x, float y, float z, float w ) : x{ x }, y{ y }, z{ z }, w{ w }
-        {
-        }
-    };
-
     struct vector2_t
     {
         float x, y;
@@ -86,6 +76,21 @@ namespace nord::rbx::engine
         {
         }
 
+        inline const float& operator[]( int i ) const
+        {
+            return ( ( float* )this )[ i ];
+        }
+
+        inline float& operator[]( int i )
+        {
+            return ( ( float* )this )[ i ];
+        }
+
+        inline vector3_t __fastcall operator/( float s ) const
+        {
+            return *this * ( 1.0f / s );
+        }
+
         const float dot( const vector3_t& vec ) const
         {
             return x * vec.x + y * vec.y + z * vec.z;
@@ -104,6 +109,18 @@ namespace nord::rbx::engine
         const float squared() const
         {
             return x * x + y * y + z * z;
+        }
+
+        inline float squaredMagnitude() const
+        {
+            return x * x + y * y + z * z;
+        }
+
+        inline vector3_t direction() const
+        {
+            const float lenSquared = squaredMagnitude();
+            const float invSqrt = 1.0f / sqrtf( lenSquared );
+            return vector3_t( x * invSqrt, y * invSqrt, z * invSqrt );
         }
 
         vector3_t operator-( const vector3_t& vec ) const
@@ -160,6 +177,44 @@ namespace nord::rbx::engine
         }
     };
 
+    struct vector4_t
+    {
+        float x, y, z, w;
+
+        vector4_t() = default;
+        vector4_t( float x, float y, float z, float w ) : x{ x }, y{ y }, z{ z }, w{ w }
+        {
+        }
+
+        inline vector4_t( const vector3_t& rkVector, float fW )
+        {
+            x = rkVector.x;
+            y = rkVector.y;
+            z = rkVector.z;
+            w = fW;
+        }
+
+        inline float dot( const vector4_t& rkVector ) const
+        {
+            return x * rkVector.x + y * rkVector.y + z * rkVector.z + w * rkVector.w;
+        }
+
+        inline const float& operator[]( int i ) const
+        {
+            return ( ( float* )this )[ i ];
+        }
+
+        inline float& operator[]( int i )
+        {
+            return ( ( float* )this )[ i ];
+        }
+
+        vector3_t xyz() const
+        {
+            return vector3_t( x, y, z );
+        }
+    };
+
     struct matrix3_t
     {
         float elt[ 3 ][ 3 ];
@@ -167,6 +222,16 @@ namespace nord::rbx::engine
         vector3_t column( std::uint32_t c )
         {
             return { elt[ 0 ][ c ], elt[ 1 ][ c ], elt[ 2 ][ c ] };
+        }
+
+        inline float* operator[]( int i )
+        {
+            return ( float* )&elt[ i ][ 0 ];
+        }
+
+        inline const float* operator[]( int i ) const
+        {
+            return ( const float* )&elt[ i ][ 0 ];
         }
 
         bool toEulerAnglesXYZ( float& rfXAngle, float& rfYAngle, float& rfZAngle ) const
@@ -240,22 +305,162 @@ namespace nord::rbx::engine
 
     struct matrix4_t
     {
-        float mat[ 4 ][ 4 ];
+        float elt[ 4 ][ 4 ];
 
         constexpr auto operator[]( int i ) const noexcept
         {
-            return mat[ i ];
+            return elt[ i ];
         }
         auto operator*( vector3_t mul ) const noexcept
         {
             vector4_t ret;
 
-            ret.x = mat[ 0 ][ 0 ] * mul.x + mat[ 0 ][ 1 ] * mul.y + mat[ 0 ][ 2 ] * mul.z + mat[ 0 ][ 3 ];
-            ret.y = mat[ 1 ][ 0 ] * mul.x + mat[ 1 ][ 1 ] * mul.y + mat[ 1 ][ 2 ] * mul.z + mat[ 1 ][ 3 ];
-            ret.z = mat[ 2 ][ 0 ] * mul.x + mat[ 2 ][ 1 ] * mul.y + mat[ 2 ][ 2 ] * mul.z + mat[ 2 ][ 3 ];
-            ret.w = mat[ 3 ][ 0 ] * mul.x + mat[ 3 ][ 1 ] * mul.y + mat[ 3 ][ 2 ] * mul.z + mat[ 3 ][ 3 ];
+            ret.x = elt[ 0 ][ 0 ] * mul.x + elt[ 0 ][ 1 ] * mul.y + elt[ 0 ][ 2 ] * mul.z + elt[ 0 ][ 3 ];
+            ret.y = elt[ 1 ][ 0 ] * mul.x + elt[ 1 ][ 1 ] * mul.y + elt[ 1 ][ 2 ] * mul.z + elt[ 1 ][ 3 ];
+            ret.z = elt[ 2 ][ 0 ] * mul.x + elt[ 2 ][ 1 ] * mul.y + elt[ 2 ][ 2 ] * mul.z + elt[ 2 ][ 3 ];
+            ret.w = elt[ 3 ][ 0 ] * mul.x + elt[ 3 ][ 1 ] * mul.y + elt[ 3 ][ 2 ] * mul.z + elt[ 3 ][ 3 ];
 
             return ret;
+        }
+
+        float subDeterminant( int excludeRow, int excludeCol ) const
+        {
+            // Compute non-excluded row and column indices
+            int row[ 3 ];
+            int col[ 3 ];
+
+            for ( int i = 0; i < 3; ++i )
+            {
+                row[ i ] = i;
+                col[ i ] = i;
+
+                if ( i >= excludeRow )
+                {
+                    ++row[ i ];
+                }
+                if ( i >= excludeCol )
+                {
+                    ++col[ i ];
+                }
+            }
+
+            // Compute the first row of cofactors
+            float cofactor00 = elt[ row[ 1 ] ][ col[ 1 ] ] * elt[ row[ 2 ] ][ col[ 2 ] ] -
+                               elt[ row[ 1 ] ][ col[ 2 ] ] * elt[ row[ 2 ] ][ col[ 1 ] ];
+
+            float cofactor10 = elt[ row[ 1 ] ][ col[ 2 ] ] * elt[ row[ 2 ] ][ col[ 0 ] ] -
+                               elt[ row[ 1 ] ][ col[ 0 ] ] * elt[ row[ 2 ] ][ col[ 2 ] ];
+
+            float cofactor20 = elt[ row[ 1 ] ][ col[ 0 ] ] * elt[ row[ 2 ] ][ col[ 1 ] ] -
+                               elt[ row[ 1 ] ][ col[ 1 ] ] * elt[ row[ 2 ] ][ col[ 0 ] ];
+
+            // Product of the first row and the cofactors along the first row
+            return elt[ row[ 0 ] ][ col[ 0 ] ] * cofactor00 + elt[ row[ 0 ] ][ col[ 1 ] ] * cofactor10 +
+                   elt[ row[ 0 ] ][ col[ 2 ] ] * cofactor20;
+        }
+
+        matrix4_t cofactor() const
+        {
+            matrix4_t out;
+
+            // We'll use i to incrementally compute -1 ^ (r+c)
+            int i = 1;
+
+            for ( int r = 0; r < 4; ++r )
+            {
+                for ( int c = 0; c < 4; ++c )
+                {
+                    // Compute the determinant of the 3x3 submatrix
+                    float det = subDeterminant( r, c );
+                    out.elt[ r ][ c ] = i * det;
+                    i = -i;
+                }
+                i = -i;
+            }
+
+            return out;
+        }
+
+        const vector4_t& row( int r ) const
+        {
+            return reinterpret_cast< const vector4_t* >( elt[ r ] )[ 0 ];
+        }
+
+        vector4_t column( int c ) const
+        {
+            vector4_t v;
+            for ( int r = 0; r < 4; ++r )
+            {
+                v[ r ] = elt[ r ][ c ];
+            }
+            return v;
+        }
+
+        float determinant() const
+        {
+            // Determinant is the dot product of the first row and the first row
+            // of cofactors (i.e. the first col of the adjoint matrix)
+            return cofactor().row( 0 ).dot( row( 0 ) );
+        }
+
+        matrix4_t transpose() const
+        {
+            matrix4_t result;
+            for ( int r = 0; r < 4; ++r )
+            {
+                for ( int c = 0; c < 4; ++c )
+                {
+                    result.elt[ c ][ r ] = elt[ r ][ c ];
+                }
+            }
+
+            return result;
+        }
+
+        matrix4_t adjoint() const
+        {
+            return cofactor().transpose();
+        }
+
+        matrix4_t operator*( const float s ) const
+        {
+            matrix4_t result;
+            for ( int r = 0; r < 4; ++r )
+            {
+                for ( int c = 0; c < 4; ++c )
+                {
+                    result.elt[ r ][ c ] = elt[ r ][ c ] * s;
+                }
+            }
+
+            return result;
+        }
+
+        matrix4_t inverse() const
+        {
+            // Inverse = adjoint / determinant
+
+            matrix4_t A = adjoint();
+
+            // Determinant is the dot product of the first row and the first row
+            // of cofactors (i.e. the first col of the adjoint matrix)
+            float det = A.column( 0 ).dot( row( 0 ) );
+
+            return A * ( 1.0f / det );
+        }
+
+        vector4_t operator*( const vector4_t& vector ) const
+        {
+            vector4_t result( 0, 0, 0, 0 );
+            for ( int r = 0; r < 4; ++r )
+            {
+                for ( int c = 0; c < 4; ++c )
+                {
+                    result[ r ] += elt[ r ][ c ] * vector[ c ];
+                }
+            }
+
+            return result;
         }
     };
 
@@ -268,5 +473,17 @@ namespace nord::rbx::engine
         {
             return -rotation.column( 2 );
         }
+
+        inline vector3_t point_to_object_space( const vector3_t& v ) const
+        {
+            float p[ 3 ];
+            p[ 0 ] = v[ 0 ] - translation[ 0 ];
+            p[ 1 ] = v[ 1 ] - translation[ 1 ];
+            p[ 2 ] = v[ 2 ] - translation[ 2 ];
+
+            return { rotation[ 0 ][ 0 ] * p[ 0 ] + rotation[ 1 ][ 0 ] * p[ 1 ] + rotation[ 2 ][ 0 ] * p[ 2 ],
+                     rotation[ 0 ][ 1 ] * p[ 0 ] + rotation[ 1 ][ 1 ] * p[ 1 ] + rotation[ 2 ][ 1 ] * p[ 2 ],
+                     rotation[ 0 ][ 2 ] * p[ 0 ] + rotation[ 1 ][ 2 ] * p[ 1 ] + rotation[ 2 ][ 2 ] * p[ 2 ] };
+        }
     };
-}  // namespace nord::rbx
+}  // namespace nord::rbx::engine

@@ -17,6 +17,9 @@ namespace nord
         // processes visuals
         void run_visuals();
 
+        // processes other features
+        void run_other();
+
         // visual features
         void static_box_esp( rbx::player player, ImColor color, std::int32_t distance );
         void dynamic_box_esp( rbx::player player, ImColor color, std::int32_t distance );

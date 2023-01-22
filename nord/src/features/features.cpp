@@ -1,5 +1,9 @@
 #include "features.hpp"
 
+#include <algorithm>
+#include <execution>
+
+#include "../data/roblox/world/contact_manager.hpp"
 #include "../overlay/menu/menu.hpp"
 
 namespace nord
@@ -11,13 +15,29 @@ namespace nord
             {
                 while ( true )
                 {
-                    run_visuals();
+                    __try
+                    {
+                        run_visuals();
 
-                    overlay_mgr.render_list.update();
+                        overlay_mgr.render_list.update();
+                    }
+                    __except ( EXCEPTION_EXECUTE_HANDLER )
+                    {
+                    }
+                }
+            } );
+
+        std::thread other(
+            [ & ]()
+            {
+                while ( true )
+                {
+                    run_other();
                 }
             } );
 
         visuals.detach();
+        other.detach();
     }
 
     void features::run_visuals()
@@ -26,33 +46,38 @@ namespace nord
         {
             const auto local_player = process_hook_mgr.players.local_player();
 
-            for ( const auto& player : process_hook_mgr.players.get_children_as< rbx::player >() )
-            {
-                if ( player.get_address() == local_player.get_address() )
-                    continue;
+            std::vector< rbx::player > players = process_hook_mgr.players.get_children_as< rbx::player >();
 
-                if ( config_mgr.get< bool >( "team_check" ) && player.is_teammate( local_player ) )
-                    continue;
+            std::for_each(
+                std::execution::par,
+                players.begin(),
+                players.end(),
+                [ & ]( rbx::player& player )
+                {
+                    if ( player.get_address() == local_player.get_address() )
+                        return;
 
-                ImColor color = get_player_color( player, player.is_teammate( local_player ) );
+                    if ( config_mgr.get< bool >( "team_check" ) && player.is_teammate( local_player ) )
+                        return;
 
-                const auto character = player.character();
+                    ImColor color = get_player_color( player, player.is_teammate( local_player ) );
 
-                if ( !character.get_address() )
-                    continue;
+                    const auto character = player.character();
 
-                const auto distance = process_hook_mgr.camera.get_distance_from( player.get_root_part() );
+                    if ( !character.get_address() )
+                        return;
 
-                if ( config_mgr.get< bool >( "distance_check" ) &&
-                     ( distance >= config_mgr.get< int >( "render_distance" ) || distance <= 5 ) )
-                    continue;
+                    const auto distance = process_hook_mgr.camera.get_distance_from( player.get_root_part() );
 
+                    if ( config_mgr.get< bool >( "distance_check" ) &&
+                         ( distance >= config_mgr.get< int >( "render_distance" ) || distance <= 5 ) )
+                        return;
 
-                if ( config_mgr.get< bool >( "box_esp_dynamic" ) )
-                    dynamic_box_esp( player, color, distance );
-                else
-                    static_box_esp( player, color, distance );
-            }
+                    if ( config_mgr.get< bool >( "box_esp_dynamic" ) )
+                        dynamic_box_esp( player, color, distance );
+                    else
+                        static_box_esp( player, color, distance );
+                } );
         }
 
         draw_fov_circle();
@@ -225,6 +250,17 @@ namespace nord
             return clamp;
 
         return size;
+    }
+
+    void features::run_other()
+    {
+        const auto [ x, y ] = process_hook_mgr.visual_engine->viewport();
+
+        const auto ray = process_hook_mgr.camera.screen_point_to_ray( x / 2, y / 2 );
+        printf( "ray direction: { %f, %f, %f }\n", ray.get_direction().x, ray.get_direction().y, ray.get_direction().z );
+        printf( "ray origin: { %f, %f, %f }\n\n", ray.get_origin().x, ray.get_origin().y, ray.get_origin().z );
+
+        // rbx::contact_manager::get()->get_ray_hit();
     }
 
     features feature_mgr;

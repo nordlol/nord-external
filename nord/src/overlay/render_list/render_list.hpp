@@ -115,9 +115,9 @@ namespace nord::render
         void update() noexcept;
 
        private:
-        std::vector< std::shared_ptr< base > > temp;
+        std::vector< base* > temp;
 
-        std::vector< std::shared_ptr< base > > list;
+        std::vector< base* > list;
         std::mutex mutex;
     };
 }  // namespace nord::render

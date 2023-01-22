@@ -154,6 +154,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\data\roblox\engine\ray.cpp" />
+    <ClCompile Include="src\data\roblox\world\contact_manager.cpp" />
+    <ClCompile Include="src\data\roblox\world\primitive.cpp" />
     <ClCompile Include="src\data\roblox\util\brick_color.cpp" />
     <ClCompile Include="src\data\roblox\data_model\camera.cpp" />
     <ClCompile Include="src\data\roblox\data_model\humanoid.cpp" />
@@ -192,6 +195,9 @@
     <ClCompile Include="src\data\roblox\data_model\team.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\data\roblox\engine\ray.hpp" />
+    <ClInclude Include="src\data\roblox\world\contact_manager.hpp" />
+    <ClInclude Include="src\data\roblox\world\primitive.hpp" />
     <ClInclude Include="src\data\roblox\util\brick_color.hpp" />
     <ClInclude Include="src\data\roblox\data_model\camera.hpp" />
     <ClInclude Include="src\data\roblox\data_model\humanoid.hpp" />

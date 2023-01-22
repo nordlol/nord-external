@@ -238,14 +238,12 @@ namespace nord
             glfwSetWindowPos( window, process_hook_mgr.screen.x, process_hook_mgr.screen.y );
             glfwSetWindowSize( window, process_hook_mgr.screen.width, process_hook_mgr.screen.height );
 
-            try
+            __try
             {
                 render();
             }
-            catch ( const std::exception& e )
+            __except ( EXCEPTION_EXECUTE_HANDLER )
             {
-                log_mgr.log_error( "overlay", "unexpected: %s\n", e.what() );
-                return false;
             }
 
             // key callback function
@@ -267,32 +265,40 @@ namespace nord
 
     void overlay::render()
     {
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
+        try
+        {
+            ImGui_ImplOpenGL3_NewFrame();
+            ImGui_ImplGlfw_NewFrame();
+            ImGui::NewFrame();
 
-        ImGui::PushFont( menu_mgr.widget_normal );
-        const auto draw_list = ImGui::GetBackgroundDrawList();
-        render_list.begin();
-        render_list.draw( draw_list );
-        render_list.end();
-        ImGui::PopFont();
+            ImGui::PushFont( menu_mgr.widget_normal );
 
-        glfwSetWindowAttrib( window, GLFW_MOUSE_PASSTHROUGH, !( overlay_mgr.show_ui && overlay_mgr.is_focused ) );
+            const auto draw_list = ImGui::GetBackgroundDrawList();
+            render_list.begin();
+            render_list.draw( draw_list );
+            render_list.end();
 
-        if ( show_ui )
-            menu_mgr.render();
+            ImGui::PopFont();
 
-        ImGui::Render();
+            glfwSetWindowAttrib( window, GLFW_MOUSE_PASSTHROUGH, !( overlay_mgr.show_ui && overlay_mgr.is_focused ) );
 
-        int display_w, display_h;
-        glfwGetFramebufferSize( window, &display_w, &display_h );
-        glViewport( 0, 0, display_w, display_h );
-        glClearColor( 0.0f, 0.0f, 0.0f, ( show_ui ) ? 0.2f : 0.0f );
-        glClear( GL_COLOR_BUFFER_BIT );
+            if ( show_ui )
+                menu_mgr.render();
 
-        // only render if the game window is selected
-        ImGui_ImplOpenGL3_RenderDrawData( ImGui::GetDrawData() );
+            ImGui::Render();
+
+            int display_w, display_h;
+            glfwGetFramebufferSize( window, &display_w, &display_h );
+            glViewport( 0, 0, display_w, display_h );
+            glClearColor( 0.0f, 0.0f, 0.0f, ( show_ui ) ? 0.2f : 0.0f );
+            glClear( GL_COLOR_BUFFER_BIT );
+
+            // only render if the game window is selected
+            ImGui_ImplOpenGL3_RenderDrawData( ImGui::GetDrawData() );
+        }
+        catch ( const std::exception& )
+        {
+        }
     }
 
     void overlay::destroy_glflw()

@@ -10,7 +10,7 @@ namespace nord::rbx
 
         if ( container )
             return process_hook_mgr.mem.proc->read_vector< instance >( container );
-        
+
         return std::vector< instance >();
     }
 

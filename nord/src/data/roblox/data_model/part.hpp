@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../engine/engine.hpp"
+#include "../world/primitive.hpp"
 #include "instance.hpp"
 
 namespace nord::rbx
@@ -13,7 +14,7 @@ namespace nord::rbx
         engine::cframe_t cfame() const;
         engine::vector3_t size() const;
 
-       private:
-        std::uintptr_t primitive() const;
+        // required for rbx::contact_manager
+        primitive primitive() const;
     };
 }  // namespace nord::rbx

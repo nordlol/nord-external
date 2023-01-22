@@ -1,4 +1,5 @@
 #include "render_list.hpp"
+#include <excpt.h>
 
 namespace nord::render
 {
@@ -60,6 +61,15 @@ namespace nord::render
     void render_list::draw( ImDrawList* dl )
     {
         for ( const auto& item : list )
-            item->render( dl );
+        {
+            __try
+            {
+                item->render( dl );
+            }
+            __except ( EXCEPTION_EXECUTE_HANDLER )
+            {
+            }
+        }
+
     }
 }  // namespace nord::render

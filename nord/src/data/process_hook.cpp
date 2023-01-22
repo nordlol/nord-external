@@ -98,7 +98,7 @@ namespace nord
         camera = workspace.current_camera();
         teams = data_model->get_child_by_name( "Teams" );
 
-        printf( "%x\n", players.local_player().get_address() );
+        printf( "%d\n", players.local_player().character().get_children().size() );
         return true;
     }
 
