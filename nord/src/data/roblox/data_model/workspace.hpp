@@ -1,7 +1,7 @@
 #pragma once
 
-#include "instance.hpp"
 #include "camera.hpp"
+#include "instance.hpp"
 
 namespace nord::rbx
 {
@@ -11,6 +11,7 @@ namespace nord::rbx
 
        public:
         camera current_camera() const;
+
        private:
     };
 }  // namespace nord::rbx

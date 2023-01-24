@@ -1,12 +1,11 @@
 #pragma once
 
 #include <optional>
+#include <unordered_set>
 
 #include "../data_model/part.hpp"
-#include "primitive.hpp"
 #include "../engine/ray.hpp"
-
-constexpr float MAX_SEARCH_DEPTH = 2048.0f;
+#include "primitive.hpp"
 
 namespace nord::rbx
 {
@@ -15,12 +14,16 @@ namespace nord::rbx
        public:
         static std::shared_ptr< contact_manager > get();
 
-        std::optional< part > get_ray_hit(engine::ray unit_ray); // TODO: add ignore list
+        constexpr static float MAX_SEARCH_DEPTH = 2048.0f;
+
+        std::optional< part > get_ray_hit( engine::ray unit_ray, std::unordered_set< std::uintptr_t > ignore );
 
        private:
         // prevent creation of the class outside of the singleton class
         contact_manager()
         {
         }
+
+        std::vector< part > get_parts( instance root, std::unordered_set< std::uintptr_t > ignore ) const;
     };
 }  // namespace nord::rbx

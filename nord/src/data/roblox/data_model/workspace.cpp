@@ -1,5 +1,7 @@
 #include "workspace.hpp"
 
+#include <execution>
+
 #include "../../process_hook.hpp"
 
 namespace nord::rbx
@@ -8,4 +10,6 @@ namespace nord::rbx
     {
         return process_hook_mgr.mem.proc->read< std::uintptr_t >( get_address() + 0x330 );
     }
-}
+
+
+}  // namespace nord::rbx

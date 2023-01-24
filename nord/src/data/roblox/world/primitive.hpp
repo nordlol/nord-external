@@ -12,7 +12,7 @@ namespace nord::rbx
        public:
         engine::cframe_t cfame() const;
         engine::vector3_t size() const;
-
+        float radius() const;
        private:
     };
 }  // namespace nord::rbx

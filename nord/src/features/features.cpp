@@ -254,13 +254,21 @@ namespace nord
 
     void features::run_other()
     {
-        const auto [ x, y ] = process_hook_mgr.visual_engine->viewport();
+        const auto local_player = process_hook_mgr.players.local_player();
 
-        const auto ray = process_hook_mgr.camera.screen_point_to_ray( x / 2, y / 2 );
-        printf( "ray direction: { %f, %f, %f }\n", ray.get_direction().x, ray.get_direction().y, ray.get_direction().z );
-        printf( "ray origin: { %f, %f, %f }\n\n", ray.get_origin().x, ray.get_origin().y, ray.get_origin().z );
+        const auto [ x, y ] = get_fov_center();
 
-        // rbx::contact_manager::get()->get_ray_hit();
+        const auto unit_ray = process_hook_mgr.camera.screen_point_to_ray( x, y ).unit();
+
+        std::unordered_set< std::uintptr_t > ignore = {
+            local_player.character().get_address(),
+            process_hook_mgr.camera.get_address(),
+        };
+
+        const auto part = rbx::contact_manager::get()->get_ray_hit( unit_ray, ignore );
+
+        if ( part )
+            printf( "intersection: %s\n", ( *part ).parent().name().c_str() );
     }
 
     features feature_mgr;

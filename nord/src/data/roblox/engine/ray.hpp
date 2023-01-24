@@ -21,6 +21,15 @@ namespace nord::rbx::engine
             return direction;
         }
 
+        inline ray unit() const
+        {
+            return { origin, direction.direction() };
+        }
+
+        inline bool is_unit()
+        {
+            return direction.squared() == 1.0f;
+        }
        private:
         vector3_t origin;
         vector3_t direction;

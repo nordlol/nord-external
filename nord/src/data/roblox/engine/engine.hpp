@@ -111,16 +111,19 @@ namespace nord::rbx::engine
             return x * x + y * y + z * z;
         }
 
-        inline float squaredMagnitude() const
-        {
-            return x * x + y * y + z * z;
-        }
-
         inline vector3_t direction() const
         {
-            const float lenSquared = squaredMagnitude();
+            const float lenSquared = squared();
             const float invSqrt = 1.0f / sqrtf( lenSquared );
             return vector3_t( x * invSqrt, y * invSqrt, z * invSqrt );
+        }
+
+        inline vector3_t& operator*=( float fScalar )
+        {
+            x *= fScalar;
+            y *= fScalar;
+            z *= fScalar;
+            return *this;
         }
 
         vector3_t operator-( const vector3_t& vec ) const
