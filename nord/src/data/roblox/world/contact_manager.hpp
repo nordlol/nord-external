@@ -1,5 +1,6 @@
 #pragma once
 
+#include <mutex>
 #include <optional>
 #include <unordered_set>
 
@@ -13,10 +14,12 @@ namespace nord::rbx
     {
        public:
         static std::shared_ptr< contact_manager > get();
-
         constexpr static float MAX_SEARCH_DEPTH = 2048.0f;
 
-        std::optional< part > get_ray_hit( engine::ray unit_ray, std::unordered_set< std::uintptr_t > ignore );
+        void start();
+        void set_ignore_descendants( std::unordered_set< std::uintptr_t > ignore );
+
+        std::optional< part > get_ray_hit( engine::ray unit_ray );
 
        private:
         // prevent creation of the class outside of the singleton class
@@ -24,6 +27,10 @@ namespace nord::rbx
         {
         }
 
-        std::vector< part > get_parts( instance root, std::unordered_set< std::uintptr_t > ignore ) const;
+        std::vector< part > get_parts( instance root );
+
+        std::vector< part > parts;
+        std::unordered_set< std::uintptr_t > ignore;
+        std::mutex get_parts_lock, set_ignore_lock;
     };
 }  // namespace nord::rbx

@@ -44,6 +44,8 @@ xg_process::xg_process( const TCHAR* name ) : handle_( nullptr ), pid_( 0 ), bas
                         {
                             base_address_ = reinterpret_cast< uintptr_t >( me32.modBaseAddr );
                             module_end_ = me32.modBaseSize;
+                            printf( "process handle %p\n", handle_ );
+                            printf( "process base %x\n", base_address_ );
                             break;
                         }
                     } while ( Module32Next( hsnapshot, &me32 ) );

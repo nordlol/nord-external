@@ -278,9 +278,9 @@ namespace nord::rbx
     {
         const std::vector< brick_map::color_info >& colors = brick_map::get().map;
 
-        assert(
-            static_cast< unsigned int >( number ) < colors.size() && colors[ static_cast< std::int32_t >( number ) ].valid );
-
-        return colors[ static_cast< std::int32_t >( number ) ].color;
+        if ( static_cast< unsigned int >( number ) < colors.size() && colors[ static_cast< std::int32_t >( number ) ].valid )
+            return colors[ static_cast< std::int32_t >( number ) ].color;
+        
+        return 0;
     }
 }  // namespace nord::rbx

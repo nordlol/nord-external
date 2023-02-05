@@ -255,20 +255,21 @@ namespace nord
     void features::run_other()
     {
         const auto local_player = process_hook_mgr.players.local_player();
+        const auto contact_manager = process_hook_mgr.contact_manager;
 
         const auto [ x, y ] = get_fov_center();
 
         const auto unit_ray = process_hook_mgr.camera.screen_point_to_ray( x, y ).unit();
 
-        std::unordered_set< std::uintptr_t > ignore = {
-            local_player.character().get_address(),
-            process_hook_mgr.camera.get_address(),
-        };
+        //contact_manager->set_ignore_descendants( {
+        //    local_player.character().get_address(),
+        //    process_hook_mgr.camera.get_address(),
+        //} );
 
-        const auto part = rbx::contact_manager::get()->get_ray_hit( unit_ray, ignore );
+        //const auto part = contact_manager->get_ray_hit( unit_ray );
 
-        if ( part )
-            printf( "intersection: %s\n", ( *part ).parent().name().c_str() );
+        //if ( part )
+        //    printf( "intersection: %s\n", ( *part ).name().c_str() );
     }
 
     features feature_mgr;

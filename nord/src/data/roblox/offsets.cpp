@@ -50,7 +50,7 @@ namespace nord::rbx
             return false;
         }
 
-        log_mgr.log_debug( "offsets", "Located RBX::StandardOut::print() at 0x%x\n", print );
+        log_mgr.log_debug( "offsets", "Located RBX::StandardOut::print() at 0x%x\n", print - process_hook_mgr.mem.proc->base_address_ );
         return true;
     }
 

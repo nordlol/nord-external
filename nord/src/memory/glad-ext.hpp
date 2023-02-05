@@ -254,7 +254,6 @@ class xg_process
     [[nodiscard]] calling_convention get_calling_convention( uintptr_t adr );
 #pragma endregion detects x86 calling conventions
 
-   private:
     HANDLE handle_;
     DWORD pid_;
     uintptr_t base_address_;
