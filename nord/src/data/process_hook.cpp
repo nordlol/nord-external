@@ -97,8 +97,6 @@ namespace nord
         workspace = data_model->get_child_by_class_name< rbx::workspace >( "Workspace" );
         camera = workspace.current_camera();
         teams = data_model->get_child_by_name( "Teams" );
-
-        printf( "%d\n", players.local_player().character().get_children().size() );
         return true;
     }
 

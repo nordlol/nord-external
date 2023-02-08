@@ -10,7 +10,8 @@ namespace nord::rbx
         bad_buisness = 1168263273,
         rush_point = 2162282815,
         recoil = 1534453623,
-        apocalypse_rising_2 = 358276974
+        apocalypse_rising_2 = 358276974,
+        counter_blox = 115797356
     };
 
     class data_model : public instance

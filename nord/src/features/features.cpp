@@ -27,17 +27,7 @@ namespace nord
                 }
             } );
 
-        std::thread other(
-            [ & ]()
-            {
-                while ( true )
-                {
-                    run_other();
-                }
-            } );
-
         visuals.detach();
-        other.detach();
     }
 
     void features::run_visuals()
@@ -177,6 +167,7 @@ namespace nord
             return;
 
         name_esp( torso_x, torso_y - height - 15, player, distance );
+        distance_esp( torso_x - width, torso_y - height, distance );
         draw_snapline( get_fov_center(), ImVec2{ head_x, head_y }, ImVec2{ torso_x, torso_y } );
 
         overlay_mgr.render_list.add< render::rectangle >(
@@ -221,6 +212,7 @@ namespace nord
         }
 
         name_esp( ( max_x - min_x ) / 2 + min_x, min_y - 15, player, distance );
+        distance_esp( max_x, min_y, distance );
 
         auto [ head, torso ] = player.get_part_screen_locations();
         draw_snapline( get_fov_center(), head, torso );
@@ -239,9 +231,24 @@ namespace nord
         }
     }
 
+    void features::distance_esp( float x, float y, std::int32_t distance )
+    {
+        if ( config_mgr.get< bool >( "distance_esp" ) )
+        {
+            const auto size = config_mgr.get< bool >( "autoscale_names" ) ? clamp_distance( distance, 12 ) : 0.0f;
+            const std::string str = std::to_string( distance ) + "s";
+
+            overlay_mgr.render_list.add< render::text >(
+                ImVec2{ x + 5, y }, size, config_mgr.get< ImColor >( "distance_esp_color" ), str, false );
+        }
+    }
+
     float features::clamp_distance( std::int32_t distance, std::int32_t clamp )
     {
-        const auto size = 1 / distance * 1000;
+        if ( !distance )
+            return 0;
+
+        const auto size = ( 1 / distance ) * 1000;
 
         if ( size < 0 )
             return 0;
@@ -250,26 +257,6 @@ namespace nord
             return clamp;
 
         return size;
-    }
-
-    void features::run_other()
-    {
-        const auto local_player = process_hook_mgr.players.local_player();
-        const auto contact_manager = process_hook_mgr.contact_manager;
-
-        const auto [ x, y ] = get_fov_center();
-
-        const auto unit_ray = process_hook_mgr.camera.screen_point_to_ray( x, y ).unit();
-
-        //contact_manager->set_ignore_descendants( {
-        //    local_player.character().get_address(),
-        //    process_hook_mgr.camera.get_address(),
-        //} );
-
-        //const auto part = contact_manager->get_ray_hit( unit_ray );
-
-        //if ( part )
-        //    printf( "intersection: %s\n", ( *part ).name().c_str() );
     }
 
     features feature_mgr;

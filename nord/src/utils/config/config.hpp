@@ -115,6 +115,9 @@ namespace nord
             { "name_esp_color", feature{ ImColor{ 255, 255, 255 } } },
 
             { "render_distance", feature{ 500 } },
+            { "distance_esp", feature{ true } },
+            { "distance_esp_color", feature{ ImColor{ 255, 255, 255 } } },
+
             { "ally_color", feature{ ImColor{ 85, 170, 255 } } },
             { "enemy_color", feature{ ImColor{ 255, 170, 255 } } },
             { "use_team_color", feature{ false } },

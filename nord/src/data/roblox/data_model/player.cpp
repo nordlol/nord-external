@@ -6,10 +6,12 @@ namespace nord::rbx
 {
     instance player::character() const
     {
-        if ( process_hook_mgr.data_model->game_id() != game_t::phantom_forces )
-            return process_hook_mgr.mem.proc->read< std::uintptr_t >( get_address() + 0x6C );
-
-        return *this;
+        switch ( process_hook_mgr.data_model->game_id() )
+        {
+            case game_t::phantom_forces: return *this;
+            case game_t::counter_blox: return process_hook_mgr.workspace.get_child_by_name( name() );
+        }
+        return process_hook_mgr.mem.proc->read< std::uintptr_t >( get_address() + 0x6C );
     }
 
     rbx::team player::team() const
